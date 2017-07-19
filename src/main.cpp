@@ -2853,7 +2853,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                     } else if (prevout.scriptPubKey.IsPayToPubkey()) {
                         std::vector<unsigned char> pubkeyBytes(prevout.scriptPubKey.begin() + 1, prevout.scriptPubKey.end() - 1);
                         hashBytes = Hash160(pubkeyBytes);
-                        addressType = 3;
+                        addressType = 1;
                     } else {
                         hashBytes.SetNull();
                         addressType = 0;
