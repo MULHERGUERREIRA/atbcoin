@@ -285,7 +285,7 @@
     </message>
     <message>
         <source>(default: %u)</source>
-        <translation>default: %u)</translation>
+        <translation>(default: %u)</translation>
     </message>
     <message>
         <source>-maxmempool must be at least %d MB</source>
@@ -305,7 +305,7 @@
     </message>
     <message>
         <source>Accept public REST requests (default: %u)</source>
-        <translation>सार्वजनिक REST अनुरोध स्वीकार करें</translation>
+        <translation>सार्वजनिक REST अनुरोध स्वीकार करें (default: %u)</translation>
     </message>
     <message>
         <source>Add a node to connect to and attempt to keep the connection open</source>
@@ -409,7 +409,7 @@
     </message>
     <message>
         <source>Enable transaction replacement in the memory pool (default: %u)</source>
-        <translation>मेमोरी पूल में ट्रांज़ेक्शन प्रतिस्थापन को सक्षम करें</translation>
+        <translation>मेमोरी पूल में ट्रांज़ेक्शन प्रतिस्थापन को सक्षम करें (default: %u)</translation>
     </message>
     <message>
         <source>Error initializing block database</source>
@@ -477,7 +477,7 @@
     </message>
     <message>
         <source>Include IP addresses in debug output (default: %u)</source>
-        <translation>डीबग आउटपुट में  IP पते शामिल करें</translation>
+        <translation>डीबग आउटपुट में  IP पते शामिल करें (default: %u)</translation>
     </message>
     <message>
         <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
@@ -713,7 +713,7 @@
     </message>
     <message>
         <source>Specify pid file (default: %s)</source>
-        <translation>Pid फ़ाइल बताएं</translation>
+        <translation>Pid फ़ाइल बताएं (default: %s)</translation>
     </message>
     <message>
         <source>Specify wallet file (within data directory)</source>
@@ -725,7 +725,7 @@
     </message>
     <message>
         <source>Spend unconfirmed change when sending transactions (default: %u)</source>
-        <translation>लेनदेन भेजते समय अपुष्ट परिवर्तन खर्च करें</translation>
+        <translation>लेनदेन भेजते समय अपुष्ट परिवर्तन खर्च करें (default: %u)</translation>
     </message>
     <message>
         <source>The source code is available from %s.</source>
@@ -1567,7 +1567,7 @@
     <message>
         <source>%0 ATBcoins were received with this code.
 We recommend waiting for 3 transaction confirmations.</source>
-        <translation>% 0 इस कोड के साथ ATBcoins प्राप्त किए गए थे। हम आपको 3 लेनदेन पुष्टिकरणों की प्रतीक्षा करने की सलाह देते हैं।</translation>
+        <translation>%0 इस कोड के साथ ATBcoins प्राप्त किए गए थे। हम आपको 3 लेनदेन पुष्टिकरणों की प्रतीक्षा करने की सलाह देते हैं।</translation>
     </message>
     <message>
         <source>The bonus key was added to your wallet, but it was not possible to scan it.</source>
@@ -1786,7 +1786,7 @@ We recommend waiting for 3 transaction confirmations.</source>
     </message>
     <message>
         <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>प्रति इनपुट +/-% 1 satoshi भिन्न हो सकते हैं।</translation>
+        <translation>प्रति इनपुट +/-%1 satoshi भिन्न हो सकते हैं।</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1794,7 +1794,7 @@ We recommend waiting for 3 transaction confirmations.</source>
     </message>
     <message>
         <source>change from %1 (%2)</source>
-        <translation>%1 (% 2) से चेंज</translation>
+        <translation>%1 (%2) से चेंज</translation>
     </message>
     <message>
         <source>(change)</source>
@@ -1965,7 +1965,7 @@ We recommend waiting for 3 transaction confirmations.</source>
     </message>
     <message>
         <source>%1 will download and store a copy of the ATBcoin block chain. At least %2GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>% 1 ATBcoin ब्लॉकचैन की एक कॉपी डाउनलोड और संगृहीत करेगा। कम से कम %2GB डेटा इस निर्देशिका में संग्रहीत किया जाएगा, और यह समय के साथ बढ़ेगा। वॉलेट को भी इस निर्देशिका में संग्रहीत किया जाएगा।</translation>
+        <translation>%1 ATBcoin ब्लॉकचैन की एक कॉपी डाउनलोड और संगृहीत करेगा। कम से कम %2GB डेटा इस निर्देशिका में संग्रहीत किया जाएगा, और यह समय के साथ बढ़ेगा। वॉलेट को भी इस निर्देशिका में संग्रहीत किया जाएगा।</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -2404,7 +2404,7 @@ We recommend waiting for 3 transaction confirmations.</source>
     </message>
     <message>
         <source>Requested payment amount of %1 is too small (considered dust).</source>
-        <translation>% 1 की अनुरोधित भुगतान राशि बहुत छोटी है (डस्ट माना जाता है)।</translation>
+        <translation>%1 की अनुरोधित भुगतान राशि बहुत छोटी है (डस्ट माना जाता है)।</translation>
     </message>
     <message>
         <source>Refund from %1</source>
@@ -2482,7 +2482,7 @@ We recommend waiting for 3 transaction confirmations.</source>
     </message>
     <message>
         <source>Enter a ATBcoin address (e.g. %1)</source>
-        <translation>ATBcoin पता दर्ज करें (उदा। % 1)</translation>
+        <translation>ATBcoin पता दर्ज करें (उदा। %1)</translation>
     </message>
     <message>
         <source>%1 d</source>
@@ -2517,7 +2517,7 @@ We recommend waiting for 3 transaction confirmations.</source>
     </message>
     <message>
         <source>Error: Cannot parse configuration file: %1. Only use key=value syntax.</source>
-        <translation>त्रुटि: कॉन्फ़िगरेशन फ़ाइल को पार्स नहीं किया जा सकता:% 1। केवल key=value सिंटैक्स का उपयोग करें।</translation>
+        <translation>त्रुटि: कॉन्फ़िगरेशन फ़ाइल को पार्स नहीं किया जा सकता:%1। केवल key=value सिंटैक्स का उपयोग करें।</translation>
     </message>
     <message>
         <source>Error: %1</source>
