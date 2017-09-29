@@ -67,6 +67,13 @@
 #else
 #include <QUrlQuery>
 #endif
+#include <QNetworkRequest>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonParseError>
 
 const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
 #if defined(Q_OS_MAC)
@@ -126,6 +133,8 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     lock(0),
     unlock(0),
     mining(0),
+    update(0),
+    network(0),
     platformStyle(platformStyle)
 {
     QRect desctop=QApplication::desktop()->screenGeometry();
@@ -252,6 +261,12 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
 
     // Subscribe to notifications from core
     subscribeToCoreSignals();
+
+    network = new QNetworkAccessManager(this);
+
+    connect(network, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(replyFinished(QNetworkReply*)));
+    checkUpdate(false);
 }
 
 BitcoinGUI::~BitcoinGUI()
@@ -381,18 +396,20 @@ void BitcoinGUI::createActions()
 
 /********************************************ATB_COIN*************************************************/
 
-    shareDialog=new QAction(platformStyle->SingleColorIcon(":/icons/new"), tr("&Money share"), this);
-    restoreWallet=new QAction(platformStyle->SingleColorIcon(":/icons/editcopy"),tr("Restore Wallet"),this);
-    lock=new QAction(platformStyle->SingleColorIcon(":/icons/lock_closed"),tr("Lock Wallet"),this);
-    unlock=new QAction(platformStyle->SingleColorIcon(":/icons/lock_open"),tr("Unlock Wallet"),this);
-    mining=new QAction(platformStyle->SingleColorIcon(":/icons/tx_mined"),"mining",this);
+    shareDialog = new QAction(platformStyle->SingleColorIcon(":/icons/new"), tr("&Money share"), this);
+    restoreWallet = new QAction(platformStyle->SingleColorIcon(":/icons/editcopy"),tr("Restore Wallet"),this);
+    lock = new QAction(platformStyle->SingleColorIcon(":/icons/lock_closed"),tr("Lock Wallet"),this);
+    unlock = new QAction(platformStyle->SingleColorIcon(":/icons/lock_open"),tr("Unlock Wallet"),this);
+    mining = new QAction(platformStyle->SingleColorIcon(":/icons/tx_mined"),"mining",this);
 
+    update = new QAction(platformStyle->SingleColorIcon(":/movies/spinner-000"),"Check for updates",this);
 /*****************************************************************************************************/
 
     showHelpMessageAction->setStatusTip(tr("Return to the previously made backup copy of the wallet.").arg(tr(PACKAGE_NAME)));
 
     connect(shareDialog,SIGNAL(triggered(bool)),this,SLOT(shareDialogClicked()));
     connect(mining,SIGNAL(triggered(bool)),SLOT(miningStateChange()));
+    connect(update,SIGNAL(triggered()),SLOT(checkUpdate()));
 
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
@@ -465,6 +482,7 @@ void BitcoinGUI::createMenuBar()
     }
     settings->addAction(optionsAction);
     QMenu *help = appMenuBar->addMenu(tr("&Help"));
+    help->addAction(update);
     if(walletFrame)
     {
         help->addAction(openRPCConsoleAction);
@@ -1254,11 +1272,70 @@ void BitcoinGUI::unsubscribeFromCoreSignals()
     uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
     uiInterface.ThreadSafeQuestion.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _3, _4));
 }
+
 void BitcoinGUI::callMenu(){
 #ifndef Q_OS_MAC
     appMenuBar->setHidden(!appMenuBar->isHidden());
 #endif
 }
+
+void BitcoinGUI::checkUpdate(bool showMessage){
+    network->get(QNetworkRequest(QUrl("https://api.github.com/repos/segwit/atbcoin/releases/latest")));
+    showUpdate = showMessage;
+}
+
+void BitcoinGUI::replyFinished(QNetworkReply *reply){
+    if (reply->error() == QNetworkReply::NoError)
+    {
+      QByteArray content= reply->readAll();
+
+      QJsonParseError error;
+          QJsonDocument json = QJsonDocument::fromJson(content,&error);
+
+          if(error.error != QJsonParseError::NoError){
+              QMessageBox::warning(this,tr("response is not valid."),error.errorString());
+              return;
+          }
+
+          QString latest_version = json.object()["tag_name"].toString();
+
+          latest_version = latest_version.remove('v');
+          QString v_major = latest_version.left(latest_version.indexOf("."));
+          latest_version = latest_version.remove(0,latest_version.indexOf(".")+1);
+          QString v_minor = latest_version.left(latest_version.indexOf("."));
+          latest_version = latest_version.remove(0,latest_version.indexOf(".")+1);
+          QString v_build = latest_version;
+
+          if(v_major.toInt() != CLIENT_VERSION_MAJOR || v_minor.toInt() != CLIENT_VERSION_MINOR ||
+                  v_build.toInt() !=  CLIENT_VERSION_BUILD){
+
+      #ifdef Q_OS_LINUX
+
+              QString link = json.object()["assets"].toArray()[0].toObject()["browser_download_url"].toString();
+      #endif
+      #ifdef Q_OS_MAC
+
+              QString link = json.object()["assets"].toArray()[1].toObject()["browser_download_url"].toString();
+      #endif
+      #ifdef Q_OS_WIN
+
+              QString link = json.object()["assets"].toArray()[2].toObject()["browser_download_url"].toString();
+      #endif
+              QString message = tr("You can download new wallet version <a style='color:#a3e400;' name='here' href='%0'>here</a>\n "
+                                   "If you need a wallet for another platform then visit the download <a style='color:#a3e400;' name='page' href='%1'>page</a>.").arg(link,"https://atbcoin.com/download-en/");
+              QMessageBox::information(this,tr("Check of update"),message);
+          }else if(showUpdate){
+
+              QMessageBox::information(this,tr("Check of update"),tr("No updates available"));
+          }
+
+    }
+    else
+    {
+        QMessageBox::warning(this,tr("Connect failed"),reply->errorString());
+    }
+}
+
 UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *platformStyle) :
     optionsModel(0),
     menu(0)

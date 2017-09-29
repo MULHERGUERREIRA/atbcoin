@@ -30,6 +30,8 @@ class UnitDisplayStatusBarControl;
 class WalletFrame;
 class WalletModel;
 class HelpMessageDialog;
+class QNetworkAccessManager;
+class QNetworkReply;
 
 class CWallet;
 
@@ -120,6 +122,8 @@ private:
     QAction *lock;          //atbcoin
     QAction *unlock;        //atbcoin
     QAction *mining;        //atbcoin
+    QAction *update;        //atbcoin
+    QNetworkAccessManager *network;   //atbcoin
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -132,6 +136,8 @@ private:
     int spinnerFrame;
 
     const PlatformStyle *platformStyle;
+
+    bool showUpdate;
 
     /** Create the main UI actions. */
     void createActions();
@@ -242,6 +248,10 @@ private Q_SLOTS:
     
     /** When hideTrayIcon setting is changed in OptionsModel hide or show the icon accordingly. */
     void setTrayIconVisible(bool);
+
+    /** checkUpdate check client update  */
+    void checkUpdate(bool showMessage = true);
+    void replyFinished(QNetworkReply *reply);
 };
 
 class UnitDisplayStatusBarControl : public QLabel
