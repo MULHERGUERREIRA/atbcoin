@@ -1465,6 +1465,40 @@
         <source>Wallet must be unlocked to stake. Do you want to unlock your wallet?</source>
         <translation>Кошелек должен быть разблокирован. Вы хотите разблокировать свой кошелек?</translation>
     </message>
+    <message>
+        <source>You can download new wallet version &lt;a style=&apos;color:#a3e400;&apos; name=&apos;here&apos; href=&apos;%0&apos;&gt;here&lt;/a&gt;
+ If you need a wallet for another platform then visit the download &lt;a style=&apos;color:#a3e400;&apos; name=&apos;page&apos; href=&apos;%1&apos;&gt;page&lt;/a&gt;.</source>
+        <translation>Вы можете загрузить новую версию кошелька &lt;a style=&apos;color:#a3e400;&apos; name=&apos;здесь&apos; href=&apos;%0&apos;&gt;здесь&lt;/a&gt;
+ Если вам нужен кошелек для другой платформы, то посетите &lt;a style=&apos;color:#a3e400;&apos; name=&apos;page&apos; href=&apos;%1&apos;&gt;страницу&lt;/a&gt; загрузки.</translation>
+    </message>
+    <message>
+        <source>Check of update</source>
+        <translation>Проверка обновлений</translation>
+    </message>
+    <message>
+        <source></source>
+        <translation>Нет доступных обновлений</translation>
+    </message>
+    <message>
+        <source>Check update failed</source>
+        <translation>Не удалось проверить обновления</translation>
+    </message>
+    <message>
+        <source>Сan not read server response.</source>
+        <translation>Невозможно прочитать ответ сервера.</translation>
+    </message>
+    <message>
+        <source>mining</source>
+        <translation>Майнинг</translation>
+    </message>
+    <message>
+        <source>Check for updates</source>
+        <translation>Проверить наличие обновлений</translation>
+    </message>
+    <message>
+        <source>No updates available</source>
+        <translation>Нет доступных обновлений</translation>
+    </message>
 </context>
 <context>
     <name>BonusCodeTab</name>

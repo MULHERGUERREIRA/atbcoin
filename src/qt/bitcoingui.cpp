@@ -135,7 +135,8 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     mining(0),
     update(0),
     network(0),
-    platformStyle(platformStyle)
+    platformStyle(platformStyle),
+    showUpdate(false)
 {
     QRect desctop=QApplication::desktop()->screenGeometry();
     QSize size(desctop.width()*0.4,desctop.height()*0.4);
@@ -400,9 +401,9 @@ void BitcoinGUI::createActions()
     restoreWallet = new QAction(platformStyle->SingleColorIcon(":/icons/editcopy"),tr("Restore Wallet"),this);
     lock = new QAction(platformStyle->SingleColorIcon(":/icons/lock_closed"),tr("Lock Wallet"),this);
     unlock = new QAction(platformStyle->SingleColorIcon(":/icons/lock_open"),tr("Unlock Wallet"),this);
-    mining = new QAction(platformStyle->SingleColorIcon(":/icons/tx_mined"),"mining",this);
+    mining = new QAction(platformStyle->SingleColorIcon(":/icons/tx_mined"),tr("mining"),this);
 
-    update = new QAction(platformStyle->SingleColorIcon(":/movies/spinner-000"),"Check for updates",this);
+    update = new QAction(platformStyle->SingleColorIcon(":/movies/spinner-000"),tr("Check for updates"),this);
 /*****************************************************************************************************/
 
     showHelpMessageAction->setStatusTip(tr("Return to the previously made backup copy of the wallet.").arg(tr(PACKAGE_NAME)));
@@ -1293,36 +1294,35 @@ void BitcoinGUI::replyFinished(QNetworkReply *reply){
           QJsonDocument json = QJsonDocument::fromJson(content,&error);
 
           if(error.error != QJsonParseError::NoError){
-              QMessageBox::warning(this,tr("response is not valid."),error.errorString());
+              QMessageBox::warning(this,tr("Сan not read server response."),error.errorString());
               return;
           }
 
-          QString latest_version = json.object()["tag_name"].toString();
+          QString latest_version = json.object()["tag_name"].toString(); 
 
-          latest_version = latest_version.remove('v');
-          QString v_major = latest_version.left(latest_version.indexOf("."));
+          latest_version = latest_version.remove(0,latest_version.indexOf(QRegularExpression("[0-9]")));
+          short v_major = latest_version.left(latest_version.indexOf(".")).toShort();
           latest_version = latest_version.remove(0,latest_version.indexOf(".")+1);
-          QString v_minor = latest_version.left(latest_version.indexOf("."));
+          short v_minor = latest_version.left(latest_version.indexOf(".")).toShort();
           latest_version = latest_version.remove(0,latest_version.indexOf(".")+1);
-          QString v_build = latest_version;
+          short v_revision = latest_version.toShort();
 
-          if(v_major.toInt() != CLIENT_VERSION_MAJOR || v_minor.toInt() != CLIENT_VERSION_MINOR ||
-                  v_build.toInt() !=  CLIENT_VERSION_BUILD){
+          if(v_major != CLIENT_VERSION_MAJOR || v_minor != CLIENT_VERSION_MINOR ||
+                  v_revision !=  CLIENT_VERSION_REVISION){
+
+              QString link = QString("https://github.com/segwit/atbcoin/releases/download/%0/atbcoin_").arg(json.object()["tag_name"].toString());
 
       #ifdef Q_OS_LINUX
-
-              QString link = json.object()["assets"].toArray()[0].toObject()["browser_download_url"].toString();
+              link.push_back("linux.zip");
       #endif
       #ifdef Q_OS_MAC
-
-              QString link = json.object()["assets"].toArray()[1].toObject()["browser_download_url"].toString();
+              link.push_back("mac.dmg");
       #endif
       #ifdef Q_OS_WIN
-
-              QString link = json.object()["assets"].toArray()[2].toObject()["browser_download_url"].toString();
+              link.push_back("win.zip");
       #endif
               QString message = tr("You can download new wallet version <a style='color:#a3e400;' name='here' href='%0'>here</a>\n "
-                                   "If you need a wallet for another platform then visit the download <a style='color:#a3e400;' name='page' href='%1'>page</a>.").arg(link,"https://atbcoin.com/download-en/");
+                                   "If you need a wallet for another platform then visit the download <a style='color:#a3e400;' name='page' href='%1'>page</a>.").arg(link,"https://github.com/segwit/atbcoin/releases");
               QMessageBox::information(this,tr("Check of update"),message);
           }else if(showUpdate){
 
@@ -1330,9 +1330,10 @@ void BitcoinGUI::replyFinished(QNetworkReply *reply){
           }
 
     }
-    else
+    else if(showUpdate)
     {
-        QMessageBox::warning(this,tr("Connect failed"),reply->errorString());
+
+        QMessageBox::warning(this,tr("Check update failed"),reply->errorString());
     }
 }
 
