@@ -6,6 +6,7 @@
 #include "guiconstants.h"
 #include <QStringList>
 #include <cmath>
+#include <QRegularExpression>
 BitcoinUnits::BitcoinUnits(QObject *parent):
         QAbstractListModel(parent),
         unitlist(availableUnits())
@@ -91,7 +92,7 @@ int BitcoinUnits::decimals(int unit)
         return STATIC_DECEMALS;
     }
 }
-QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, SeparatorStyle separators)
+QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, SeparatorStyle separators, bool autodecimals)
 {
     // Note: not using straight sprintf here because we do NOT want
     // localized number formatting.
@@ -116,7 +117,11 @@ QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, Separator
         quotient_str.insert(0, '-');
     else if (fPlus && n >= 0)
         quotient_str.insert(0, '+');
-    return quotient_str + QString(".") + remainder_str;
+    QString result = quotient_str + QString(".") + remainder_str;
+    if(autodecimals){
+         return (remainder > 0)?result.remove(result.lastIndexOf(QRegularExpression("[^0]"))+1 ,10):quotient_str;
+    }
+    return result;
 }
 // NOTE: Using formatWithUnit in an HTML context risks wrapping
 // quantities at the thousands separator. More subtly, it also results
@@ -125,13 +130,13 @@ QString BitcoinUnits::format(int unit, const CAmount& nIn, bool fPlus, Separator
 //
 // Please take care to use formatHtmlWithUnit instead, when
 // appropriate.
-QString BitcoinUnits::formatWithUnit(int unit, const CAmount& amount, bool plussign, SeparatorStyle separators)
+QString BitcoinUnits::formatWithUnit(int unit, const CAmount& amount, bool plussign, SeparatorStyle separators, bool autodecimals)
 {
-    return format(unit, amount, plussign, separators) + QString(" ") + name(unit);
+    return format(unit, amount, plussign, separators, autodecimals) + QString(" ") + name(unit);
 }
-QString BitcoinUnits::formatHtmlWithUnit(int unit, const CAmount& amount, bool plussign, SeparatorStyle separators)
+QString BitcoinUnits::formatHtmlWithUnit(int unit, const CAmount& amount, bool plussign, SeparatorStyle separators, bool autodecimals)
 {
-    QString str(formatWithUnit(unit, amount, plussign, separators));
+    QString str(formatWithUnit(unit, amount, plussign, separators, autodecimals));
     str.replace(QChar(THIN_SP_CP), QString(THIN_SP_HTML));
     return QString("<span style='white-space: nowrap;'>%1</span>").arg(str);
 }

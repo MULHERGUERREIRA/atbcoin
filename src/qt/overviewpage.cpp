@@ -99,6 +99,9 @@ public:
         font.setPointSize(10);
 #endif
         painter->setFont(font);
+        if(painter->fontMetrics().width(address) > (mainRect.width() - 75)){
+            address = address.left((mainRect.width() - 75) / painter->fontMetrics().width("V")) + " ...";
+        }
         painter->drawText(addressRect, Qt::AlignLeft|Qt::AlignVCenter, address, &boundingRect);
 
 
@@ -115,7 +118,7 @@ public:
             foreground = option.palette.color(QPalette::Text);
         }
         painter->setPen(foreground);
-        QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true, BitcoinUnits::separatorAlways);
+        QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true, BitcoinUnits::separatorAlways,true);
         if(!confirmed)
         {
             amountText = QString("") + amountText + QString("");
@@ -127,20 +130,10 @@ public:
             painter->setPen(QColor::fromRgb(0xe3,0x3b,0x19));
         painter->drawText(amountRect, Qt::AlignLeft |Qt::AlignVCenter, amountText);
         painter->setPen(QColor::fromRgb(0x19, 0xa3, 0x7e));
-        int space;
-#ifdef Q_OS_UNIX
-        space=10;
-#endif
-#ifdef Q_OS_WIN
-        space=20;
-#endif
-#ifdef Q_OS_MAC
-        space=10;
-#endif
-        atbRect.setX(atbRect.x()+amountText.size()*6+space);
+        atbRect.setX(atbRect.x() + amountText.size() + painter->fontMetrics().width(amountText) - 5 );
         painter->drawText(atbRect,Qt::AlignLeft |Qt::AlignVCenter,"ATB");
         painter->setPen(QColor::fromRgb(0x9d,0x9d,0x9d));
-        amountRect.setWidth(amountRect.width()-15);
+        amountRect.setWidth(amountRect.width() - 15);
         painter->drawText(amountRect, Qt::AlignRight|Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
 
         painter->restore();

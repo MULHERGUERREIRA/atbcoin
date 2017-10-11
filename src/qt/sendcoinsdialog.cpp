@@ -55,6 +55,7 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     }
 
     GUIUtil::setupAddressWidget(ui->lineEditCoinControlChange, this);
+    ui->lineEditCoinControlChange->setVisible(false);
 
     addEntry();
 
