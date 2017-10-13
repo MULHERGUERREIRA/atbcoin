@@ -278,7 +278,7 @@ void WalletView::changePassphrase()
 void WalletView::restoreWallet(){
     int result;
     result=QMessageBox::warning(this,tr("Wallet Restore"),tr("Restoring the backup will result in a loss of funds received in the interval from the creation of the backup to the current time."
-                                               "Do this only if you have lost access to your wallet.Would you like to continue with the restoration?"),
+                                               " Do this only if you have lost access to your wallet. Would you like to continue with the restoration?"),
                          QMessageBox::Yes,QMessageBox::No);
     if(result==QMessageBox::Yes){
         QString url= QFileDialog::getOpenFileName(this,tr("Import a backup."),"","*.dat");

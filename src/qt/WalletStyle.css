@@ -766,6 +766,7 @@ QTableView::item,QTreeView::item{
     margin: 0px;
     padding-left: -1px;
 }
+
 QHeaderView{
     background: #46a799;
 }
@@ -994,6 +995,7 @@ TransactionDescDialog #detailText,
 #CoinControlDialog QCheckBox::indicator{
     margin: 0px;
 }
+
 #treeWidget *{
     margin:0px;
 }

@@ -1026,7 +1026,7 @@
     </message>
     <message>
         <source>Change passphrase</source>
-        <translation>Change Password</translation>
+        <translation>Change passphrase</translation>
     </message>
     <message>
         <source>Enter the old passphrase and new passphrase to the wallet.</source>
@@ -1156,7 +1156,7 @@
     </message>
     <message>
         <source>&amp;Change Passphrase</source>
-        <translation>&amp;Change Password</translation>
+        <translation>&amp;Change Passphrase</translation>
     </message>
     <message>
         <source>&amp;Sending addresses</source>

@@ -28,7 +28,7 @@
 #include <QIcon>
 #include <QSettings>
 #include <QString>
-#include <QTreeWidget>
+#include "coincontroltreewidget.h"
 #include <QTreeWidgetItem>
 
 QList<CAmount> CoinControlDialog::payAmounts;
@@ -135,7 +135,7 @@ CoinControlDialog::CoinControlDialog(const PlatformStyle *platformStyle, QWidget
     ui->treeWidget->header()->setSectionResizeMode(2, QHeaderView::Stretch);
     ui->treeWidget->header()->setSectionResizeMode(3, QHeaderView::Stretch);
     ui->treeWidget->header()->setSectionResizeMode(4, QHeaderView::Stretch);
-
+    ui->treeWidget->header()->setDefaultAlignment(Qt::AlignCenter);
 
     ui->treeWidget->setColumnHidden(COLUMN_TXHASH, true);         // store transaction hash in this column, but don't show it
     ui->treeWidget->setColumnHidden(COLUMN_VOUT_INDEX, true);     // store vout index in this column, but don't show it
@@ -652,9 +652,9 @@ void CoinControlDialog::updateLabels(WalletModel *model, QDialog* dialog)
     }
 
     // turn labels "red"
-    l5->setStyleSheet((nBytes >= MAX_FREE_TRANSACTION_CREATE_SIZE) ? "color:red;" : "");// Bytes >= 1000
-    l6->setStyleSheet((dPriority > 0 && !fAllowFree) ? "color:red;" : "");              // Priority < "medium"
-    l7->setStyleSheet((fDust) ? "color:red;" : "");                                     // Dust = "yes"
+    l5->setStyleSheet((nBytes >= MAX_FREE_TRANSACTION_CREATE_SIZE) ? "color:#f6e395;" : "");// Bytes >= 1000
+    l6->setStyleSheet((dPriority > 0 && !fAllowFree) ? "color:#f6e395;" : "");              // Priority < "medium"
+    l7->setStyleSheet((fDust) ? "color:#f6e395;" : "");                                     // Dust = "yes"
 
     // tool tips
     QString toolTip1 = tr("This label turns red if the transaction size is greater than 1000 bytes.") + "<br /><br />";
