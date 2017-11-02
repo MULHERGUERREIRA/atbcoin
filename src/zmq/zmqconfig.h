@@ -14,6 +14,9 @@
 
 #if ENABLE_ZMQ
 #include <zmq.h>
+static const std::string DEFAULT_ZMQPUBHASHBLOCK = "tcp://127.0.0.1:29000";
+
+static const std::string DEFAULT_ZMQPUBRAWTX = "tcp://127.0.0.1:29000";
 #endif
 
 #include "primitives/block.h"

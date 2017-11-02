@@ -7,6 +7,7 @@
 
 #include "zmqconfig.h"
 
+
 class CBlockIndex;
 class CZMQAbstractNotifier;
 

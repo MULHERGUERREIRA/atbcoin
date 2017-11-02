@@ -58,6 +58,7 @@
 #include <openssl/crypto.h>
 
 #if ENABLE_ZMQ
+#include "zmq/zmqconfig.h"
 #include "zmq/zmqnotificationinterface.h"
 #endif
 
@@ -939,7 +940,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     else if (nScriptCheckThreads > MAX_SCRIPTCHECK_THREADS)
         nScriptCheckThreads = MAX_SCRIPTCHECK_THREADS;
 
-    fServer = GetBoolArg("-server", false);
+    fServer = GetBoolArg("-server", true);
 
     // block pruning; get the amount of disk space (in MiB) to allot for block & undo files
     int64_t nSignedPruneTarget = GetArg("-prune", 0) * 1024 * 1024;
@@ -1206,8 +1207,10 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     BOOST_FOREACH(const std::string& strDest, mapMultiArgs["-seednode"])
         AddOneShot(strDest);
-
 #if ENABLE_ZMQ
+    SoftSetArg("-zmqpubhashblock",DEFAULT_ZMQPUBHASHBLOCK);
+    SoftSetArg("-zmqpubrawtx",DEFAULT_ZMQPUBRAWTX);
+
     pzmqNotificationInterface = CZMQNotificationInterface::CreateWithArguments(mapArgs);
 
     if (pzmqNotificationInterface) {
