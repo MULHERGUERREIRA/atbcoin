@@ -217,6 +217,7 @@ namespace GUIUtil
     typedef QProgressBar ProgressBar;
 #endif
 
+    bool extractEclair();
 } // namespace GUIUtil
 
 #endif // BITCOIN_QT_GUIUTIL_H

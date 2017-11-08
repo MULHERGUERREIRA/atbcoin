@@ -969,4 +969,35 @@ bool checkUpdate(unsigned int major, unsigned int minor, unsigned int revision){
     return false;
 }
 
+bool extractEclair(){
+    QString datadir=QString::fromStdString(GetArg("-datadir",""));
+    if(datadir.isEmpty()){
+        datadir=QString::fromStdString(GetDefaultDataDir().string());
+    }
+
+    QFile eclair(datadir + "/Lightning.jar");
+    if(eclair.exists()){
+        return true;
+    }
+
+    if(eclair.open(QIODevice::WriteOnly|QIODevice::Truncate)){
+
+        QDataStream stream(&eclair);
+        QFile from(":/eclair/Eclair");
+        if(from.open(QIODevice::ReadOnly)){
+            QByteArray array(from.readAll());
+            stream.writeRawData(array.data(),array.size());
+            from.close();
+        }
+
+        eclair.close();
+
+        if(eclair.size())
+            return true;
+        else
+            return false;
+    }
+    return false;
+}
+
 } // namespace GUIUtil
