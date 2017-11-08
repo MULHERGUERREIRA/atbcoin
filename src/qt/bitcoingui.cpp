@@ -74,6 +74,8 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QDesktopServices>
+
 
 const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
 #if defined(Q_OS_MAC)
@@ -1285,55 +1287,50 @@ void BitcoinGUI::checkUpdate(bool showMessage){
     showUpdate = showMessage;
 }
 
-void BitcoinGUI::replyFinished(QNetworkReply *reply){
-    if (reply->error() == QNetworkReply::NoError)
-    {
-      QByteArray content= reply->readAll();
+void BitcoinGUI::replyFinished(QNetworkReply *reply) {
+    if (reply->error() == QNetworkReply::NoError) {
+        QByteArray content = reply->readAll();
 
-      QJsonParseError error;
-          QJsonDocument json = QJsonDocument::fromJson(content,&error);
+        QJsonParseError error;
+        QJsonDocument json = QJsonDocument::fromJson(content, &error);
 
-          if(error.error != QJsonParseError::NoError){
-              QMessageBox::warning(this,tr("Сan not read server response."),error.errorString());
-              return;
-          }
+        if (error.error != QJsonParseError::NoError) {
+            if(showUpdate)
+                QMessageBox::warning(this, tr("Сan not read server response."),
+                                 error.errorString());
+            return;
+        }
 
-          QString latest_version = json.object()["tag_name"].toString(); 
+        QString latest_version = json.object()["tag_name"].toString();
+        QRegExp reg("(\\d+)");
+        QStringList list;
+        int pos = 0;
+        while ((pos = reg.indexIn(latest_version, pos)) != -1) {
+            list << reg.cap(1);
+            pos += reg.matchedLength();
+        }
+        if(list.size() < 3 )
+            return;
+        unsigned int v_major = list[0].toInt();
+        unsigned int v_minor = list[1].toInt();
+        unsigned int v_revision = list[2].toInt();
 
-          latest_version = latest_version.remove(0,latest_version.indexOf(QRegularExpression("[0-9]")));
-          short v_major = latest_version.left(latest_version.indexOf(".")).toShort();
-          latest_version = latest_version.remove(0,latest_version.indexOf(".")+1);
-          short v_minor = latest_version.left(latest_version.indexOf(".")).toShort();
-          latest_version = latest_version.remove(0,latest_version.indexOf(".")+1);
-          short v_revision = latest_version.toShort();
+        if((v_major << 24 | v_minor << 16 | v_revision << 8) >
+                (CLIENT_VERSION_MAJOR << 24 | CLIENT_VERSION_MINOR << 16 | CLIENT_VERSION_REVISION << 8)){
 
-          if(v_major != CLIENT_VERSION_MAJOR || v_minor != CLIENT_VERSION_MINOR ||
-                  v_revision !=  CLIENT_VERSION_REVISION){
+            QString message =
+                    tr("You can download new wallet version <a style='color:#a3e400;' "
+                       "name='here' href='%0'>here</a>\n ")
+                    .arg("https://github.com/segwit/atbcoin/releases/" +
+                         latest_version);
+            QMessageBox::information(this, tr("Check of update"), message);
+        } else if (showUpdate) {
+            QMessageBox::information(this, tr("Check of update"),
+                                     tr("No updates available"));
+        }
 
-              QString link = QString("https://github.com/segwit/atbcoin/releases/download/%0/atbcoin_").arg(json.object()["tag_name"].toString());
-
-      #ifdef Q_OS_LINUX
-              link.push_back("linux.zip");
-      #endif
-      #ifdef Q_OS_MAC
-              link.push_back("mac.dmg");
-      #endif
-      #ifdef Q_OS_WIN
-              link.push_back("win.zip");
-      #endif
-              QString message = tr("You can download new wallet version <a style='color:#a3e400;' name='here' href='%0'>here</a>\n "
-                                   "If you need a wallet for another platform then visit the download <a style='color:#a3e400;' name='page' href='%1'>page</a>.").arg(link,"https://github.com/segwit/atbcoin/releases");
-              QMessageBox::information(this,tr("Check of update"),message);
-          }else if(showUpdate){
-
-              QMessageBox::information(this,tr("Check of update"),tr("No updates available"));
-          }
-
-    }
-    else if(showUpdate)
-    {
-
-        QMessageBox::warning(this,tr("Check update failed"),reply->errorString());
+    } else if (showUpdate) {
+        QMessageBox::warning(this, tr("Check update failed"), reply->errorString());
     }
 }
 
