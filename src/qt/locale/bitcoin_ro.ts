@@ -4117,7 +4117,7 @@ We recommend waiting for 3 transaction confirmations.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>Restoring the backup will result in a loss of funds received in the interval from the creation of the backup to the current time.Do this only if you have lost access to your wallet.Would you like to continue with the restoration?</source>
+        <source>Restoring the backup will result in a loss of funds received in the interval from the creation of the backup to the current time. Do this only if you have lost access to your wallet. Would you like to continue with the restoration?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

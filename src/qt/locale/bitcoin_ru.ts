@@ -4130,7 +4130,7 @@ We recommend waiting for 3 transaction confirmations.</source>
         <translation>Восстановление кошелька</translation>
     </message>
     <message>
-        <source>Restoring the backup will result in a loss of funds received in the interval from the creation of the backup to the current time.Do this only if you have lost access to your wallet.Would you like to continue with the restoration?</source>
+        <source>Restoring the backup will result in a loss of funds received in the interval from the creation of the backup to the current time. Do this only if you have lost access to your wallet. Would you like to continue with the restoration?</source>
         <translation>Восстановление резервной копии приведет к потере средств, полученных в промежутке времени от создания резервной копии до текущего времени. Это происходит только в том случае, если вы потеряли доступ к своему кошельку. Хотели бы вы продолжить восстановление?</translation>
     </message>
     <message>

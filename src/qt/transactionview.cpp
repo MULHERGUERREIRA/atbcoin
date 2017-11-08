@@ -208,6 +208,8 @@ void TransactionView::setModel(WalletModel *model)
         transactionView->sortByColumn(TransactionTableModel::Date, Qt::DescendingOrder);
         transactionView->verticalHeader()->hide();
 
+        transactionView->horizontalHeader()->setSectionResizeMode(0,QHeaderView::Fixed);
+
         transactionView->setColumnWidth(TransactionTableModel::Status, STATUS_COLUMN_WIDTH);
         transactionView->setColumnWidth(TransactionTableModel::Watchonly, WATCHONLY_COLUMN_WIDTH);
         transactionView->setColumnWidth(TransactionTableModel::Date, DATE_COLUMN_WIDTH);

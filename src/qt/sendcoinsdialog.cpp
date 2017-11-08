@@ -55,6 +55,7 @@ SendCoinsDialog::SendCoinsDialog(const PlatformStyle *platformStyle, QWidget *pa
     }
 
     GUIUtil::setupAddressWidget(ui->lineEditCoinControlChange, this);
+    ui->lineEditCoinControlChange->setVisible(false);
 
     addEntry();
 
@@ -774,7 +775,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString& text)
     {
         // Default to no change address until verified
         CoinControlDialog::coinControl->destChange = CNoDestination();
-        ui->labelCoinControlChangeLabel->setStyleSheet("QLabel{color:red;}");
+        ui->labelCoinControlChangeLabel->setStyleSheet("QLabel{color:#f6e395;}");
 
         CBitcoinAddress addr = CBitcoinAddress(text.toStdString());
 
@@ -796,7 +797,7 @@ void SendCoinsDialog::coinControlChangeEdited(const QString& text)
             }
             else // Known change address
             {
-                ui->labelCoinControlChangeLabel->setStyleSheet("QLabel{color:black;}");
+                ui->labelCoinControlChangeLabel->setStyleSheet("QLabel{color:#a4f641;}");
 
                 // Query label
                 QString associatedLabel = model->getAddressTableModel()->labelForAddress(text);

@@ -50,7 +50,11 @@ public:
     };
 
     enum ColumnWidths {
-        STATUS_COLUMN_WIDTH = 22,
+#ifdef Q_OS_MAC
+        STATUS_COLUMN_WIDTH = 25,
+#else
+        STATUS_COLUMN_WIDTH = 23,
+#endif
         WATCHONLY_COLUMN_WIDTH = 23,
         DATE_COLUMN_WIDTH = 140,
         TYPE_COLUMN_WIDTH = 190,

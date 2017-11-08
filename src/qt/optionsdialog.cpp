@@ -261,7 +261,7 @@ void OptionsDialog::on_hideTrayIcon_stateChanged(int fState)
 
 void OptionsDialog::showRestartWarning(bool fPersistent)
 {
-    ui->statusLabel->setStyleSheet("QLabel { color: red; }");
+    ui->statusLabel->setStyleSheet("QLabel { color: #f6e395; }");
 
     if(fPersistent)
     {
@@ -293,7 +293,7 @@ void OptionsDialog::updateProxyValidationState()
     else
     {
         setOkButtonState(false);
-        ui->statusLabel->setStyleSheet("QLabel { color: red; }");
+        ui->statusLabel->setStyleSheet("QLabel { color: #f6e395; }");
         ui->statusLabel->setText(tr("The supplied proxy address is invalid."));
     }
 }
