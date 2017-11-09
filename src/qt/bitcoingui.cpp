@@ -1311,8 +1311,7 @@ void BitcoinGUI::replyFinished(QNetworkReply *reply) {
         if(list.size() < 3 )
             return;
 
-        if((list[0].toInt() * 1000000 + list[1].toInt() * 1000 + list[2].toInt()) >
-           (CLIENT_VERSION_MAJOR * 1000000 + CLIENT_VERSION_MINOR * 1000 + CLIENT_VERSION_REVISION)){
+        if(GUIUtil::checkUpdate(list[0].toInt(),list[1].toInt(),list[2].toInt())){
 
             QString message =
                     tr("You can download new wallet version <a style='color:#a3e400;' "
