@@ -74,7 +74,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
-#include <QDesktopServices>
 
 
 const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
@@ -1311,12 +1310,9 @@ void BitcoinGUI::replyFinished(QNetworkReply *reply) {
         }
         if(list.size() < 3 )
             return;
-        unsigned int v_major = list[0].toInt();
-        unsigned int v_minor = list[1].toInt();
-        unsigned int v_revision = list[2].toInt();
 
-        if((v_major << 24 | v_minor << 16 | v_revision << 8) >
-                (CLIENT_VERSION_MAJOR << 24 | CLIENT_VERSION_MINOR << 16 | CLIENT_VERSION_REVISION << 8)){
+        if((list[0].toInt() * 1000000 + list[1].toInt() * 1000 + list[2].toInt()) >
+           (CLIENT_VERSION_MAJOR * 1000000 + CLIENT_VERSION_MINOR * 1000 + CLIENT_VERSION_REVISION)){
 
             QString message =
                     tr("You can download new wallet version <a style='color:#a3e400;' "
