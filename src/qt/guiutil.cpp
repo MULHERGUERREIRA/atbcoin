@@ -959,4 +959,14 @@ QString formatTimeOffset(int64_t nTimeOffset)
   return QString(QObject::tr("%1 s")).arg(QString::number((int)nTimeOffset, 10));
 }
 
+bool checkUpdate(unsigned int major, unsigned int minor, unsigned int revision){
+    if(major != CLIENT_VERSION_MAJOR)
+        return major > CLIENT_VERSION_MAJOR;
+    if(minor != CLIENT_VERSION_MINOR)
+        return minor > CLIENT_VERSION_MINOR;
+    if(revision != CLIENT_VERSION_REVISION)
+        return revision > CLIENT_VERSION_REVISION;
+    return false;
+}
+
 } // namespace GUIUtil
