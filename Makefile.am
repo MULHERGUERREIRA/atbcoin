@@ -57,7 +57,6 @@ COVERAGE_INFO = baseline_filtered_combined.info baseline.info block_test.info \
 dist-hook:
 	-$(GIT) archive --format=tar HEAD -- src/clientversion.cpp | $(AMTAR) -C $(top_distdir) -xf -
 	
-all-recursive: eclair
 	
 eclair:
 	cd $(BITCOIN_ECLAIR_DIR) && mvn package -DskipTests

@@ -32,6 +32,7 @@ class WalletModel;
 class HelpMessageDialog;
 class QNetworkAccessManager;
 class QNetworkReply;
+class QProcess;
 
 class CWallet;
 
@@ -123,7 +124,9 @@ private:
     QAction *unlock;        //atbcoin
     QAction *mining;        //atbcoin
     QAction *update;        //atbcoin
+    QAction *lightning;     //atbcoin
     QNetworkAccessManager *network;   //atbcoin
+    QProcess *EclairProcess;//atbcoin
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -250,6 +253,9 @@ private Q_SLOTS:
     /** checkUpdate check client update  */
     void checkUpdate(bool showMessage = true);
 
+    /** start eclair (Lightning client for atb) */
+    void startLightning();
+    void processHasFinished(int);
 };
 
 class UnitDisplayStatusBarControl : public QLabel

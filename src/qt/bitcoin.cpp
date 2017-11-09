@@ -390,10 +390,6 @@ void BitcoinApplication::createSplashScreen(const NetworkStyle *networkStyle)
     // Qt::WA_DeleteOnClose to make sure that the window will be deleted eventually.
     splash->setAttribute(Qt::WA_DeleteOnClose);
     splash->show();
-    if(!GUIUtil::extractEclair()){
-        QMessageBox::warning(0,tr("Lightning extract error"),
-                             tr("Could not install the lightning on your wallet."));
-    }
     connect(this, SIGNAL(splashFinished(QWidget*)), splash, SLOT(slotFinish(QWidget*)));
     connect(this, SIGNAL(requestedShutdown()), splash, SLOT(close()));
 }

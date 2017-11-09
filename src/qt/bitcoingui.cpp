@@ -74,7 +74,11 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
+#include <QProcess>
 
+#if ENABLE_ZMQ
+#include "zmq/zmqconfig.h"
+#endif
 
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
@@ -140,7 +144,10 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     mining(0),
     update(0),
     network(0),
-    platformStyle(platformStyle)
+    lightning(0),
+    EclairProcess(0),
+    platformStyle(platformStyle),
+    showUpdate(false)
 {
     QRect desctop=QApplication::desktop()->screenGeometry();
     QSize size(desctop.width()*0.4,desctop.height()*0.4);
@@ -408,6 +415,8 @@ void BitcoinGUI::createActions()
     mining = new QAction(platformStyle->SingleColorIcon(":/icons/tx_mined"),tr("mining"),this);
 
     update = new QAction(platformStyle->SingleColorIcon(":/movies/spinner-000"),tr("Check for updates"),this);
+
+    lightning = new QAction(platformStyle->SingleColorIcon(":/icons/r_coupon"),tr("Lightning"),this);
 /*****************************************************************************************************/
 
     showHelpMessageAction->setStatusTip(tr("Return to the previously made backup copy of the wallet.").arg(tr(PACKAGE_NAME)));
@@ -415,6 +424,8 @@ void BitcoinGUI::createActions()
     connect(shareDialog,SIGNAL(triggered(bool)),this,SLOT(shareDialogClicked()));
     connect(mining,SIGNAL(triggered(bool)),SLOT(miningStateChange()));
     connect(update,SIGNAL(triggered()),SLOT(checkUpdate()));
+    connect(lightning,SIGNAL(triggered()),SLOT(startLightning()));
+
 
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
     connect(optionsAction, SIGNAL(triggered()), this, SLOT(optionsClicked()));
@@ -462,6 +473,7 @@ void BitcoinGUI::createMenuBar()
     if(walletFrame)
     {
         file->addAction(openAction);
+        file->addAction(lightning);
         file->addAction(backupWalletAction);
         file->addAction(restoreWallet);
         file->addAction(signMessageAction);
@@ -1365,6 +1377,53 @@ void BitcoinGUI::checkUpdate(bool showMessage) {
         QMessageBox::information(this, tr("Check of update"),
                                  tr("No updates available"));
     }
+}
+
+void BitcoinGUI::startLightning() {
+  int eclairPort = 9735;
+  if (!GUIUtil::extractEclair()) {
+    QMessageBox::warning(this, tr("Lightning extract error"),
+                         tr("Could not install the lightning on your wallet."));
+    return;
+  }
+
+  if (EclairProcess || !QTcpSocket().bind(eclairPort)) {
+    QMessageBox::information(this, tr("Eclair"),
+                             tr("Eclair is already running"));
+    return;
+  }
+
+  QString datadir = QString::fromStdString(GetArg("-datadir", ""));
+  if (datadir.isEmpty()) {
+    datadir = QString::fromStdString(GetDefaultDataDir().string());
+  }
+
+  QString rpcuser = QString::fromStdString(GetArg("-rpcuser", ""));
+  QString rpcpass = QString::fromStdString(GetArg("-rpcpassword", ""));
+  QString network = QString::fromStdString(Params().NetworkIDString());
+  if (network == "test") network += "net";
+  QString zmqport = QString::fromStdString(
+      GetArg("-zmqpubhashblock", DEFAULT_ZMQPUBHASHBLOCK));
+
+  QString program = "java";
+  QStringList arguments;
+
+  arguments << QString("-Declair.server.port=%0").arg(eclairPort)
+            << "-Declair.bitcoind.atbdir=" + datadir
+            << "-Declair.bitcoind.rpcuser=" + rpcuser
+            << "-Declair.bitcoind.rpcpassword=" + rpcpass
+            << "-Declair.bitcoind.zmq=" + zmqport << "-Declair.chain=" + network
+            << "-jar" << datadir + "/Lightning.jar";
+
+  EclairProcess = new QProcess(this);
+  EclairProcess->start(program, arguments);
+
+  connect(EclairProcess, SIGNAL(finished(int)), SLOT(processHasFinished(int)));
+}
+
+void BitcoinGUI::processHasFinished(int){
+    delete EclairProcess;
+    EclairProcess = NULL;
 }
 
 UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *platformStyle) :
