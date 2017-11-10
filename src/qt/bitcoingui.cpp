@@ -1408,7 +1408,8 @@ void BitcoinGUI::startLightning() {
   QString program = "java";
   QStringList arguments;
 
-  arguments << QString("-Declair.server.port=%0").arg(eclairPort)
+  arguments << "-Declair.datadir=" + datadir + "/eclair"
+            << QString("-Declair.server.port=%0").arg(eclairPort)
             << "-Declair.bitcoind.atbdir=" + datadir
             << "-Declair.bitcoind.rpcuser=" + rpcuser
             << "-Declair.bitcoind.rpcpassword=" + rpcpass
@@ -1417,6 +1418,19 @@ void BitcoinGUI::startLightning() {
 
   EclairProcess = new QProcess(this);
   EclairProcess->start(program, arguments);
+  EclairProcess->waitForStarted();
+
+  if (EclairProcess->state() == QProcess::NotRunning &&
+      EclairProcess->error() == QProcess::FailedToStart) {
+    QMessageBox::warning(
+        this, tr("Java not found"),
+        tr("You need to download and install Java. click on the <a "
+           "style='color:#a3e400;' "
+           "href='http://www.oracle.com/technetwork/java/javase/downloads/"
+           "jre8-downloads-2133155.html'>link</a> to download."));
+    delete EclairProcess;
+    EclairProcess = NULL;
+  }
 
   connect(EclairProcess, SIGNAL(finished(int)), SLOT(processHasFinished(int)));
 }

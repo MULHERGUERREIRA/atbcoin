@@ -992,10 +992,8 @@ bool extractEclair(){
 
         eclair.close();
 
-        if(eclair.size())
-            return true;
-        else
-            return false;
+        return eclair.size();
+
     }
     return false;
 }
