@@ -76,6 +76,10 @@
 #include <QJsonParseError>
 
 
+#include <boost/asio.hpp>
+#include <boost/asio/ssl.hpp>
+
+
 const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
 #if defined(Q_OS_MAC)
         "macosx"
@@ -136,8 +140,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     mining(0),
     update(0),
     network(0),
-    platformStyle(platformStyle),
-    showUpdate(false)
+    platformStyle(platformStyle)
 {
     QRect desctop=QApplication::desktop()->screenGeometry();
     QSize size(desctop.width()*0.4,desctop.height()*0.4);
@@ -1281,51 +1284,86 @@ void BitcoinGUI::callMenu(){
 #endif
 }
 
-void BitcoinGUI::checkUpdate(bool showMessage){
-    network->get(QNetworkRequest(QUrl("https://api.github.com/repos/segwit/atbcoin/releases/latest")));
-    showUpdate = showMessage;
+std::string getLatestReleaseInfo() {
+    boost::system::error_code ec;
+    using namespace boost::asio;
+
+    io_service svc;
+
+    ssl::context ctx(svc, ssl::context::method::sslv23_client);
+    ssl::stream<ip::tcp::socket> ssock(svc, ctx);
+    ip::tcp::resolver resolver(svc);
+    auto it = resolver.resolve({"api.github.com", "443"});
+    boost::asio::connect(ssock.lowest_layer(), it);
+    ssock.handshake(ssl::stream_base::handshake_type::client);
+
+    std::string request(
+        "GET /repos/segwit/atbcoin/releases/latest HTTP/1.1\r\n"
+        "Host: api.github.com\r\n"
+        "User-Agent: atb-client\r\n"
+        "Accept: */*\r\n"
+        "Connection: close\r\n\r\n");
+    boost::asio::write(ssock, buffer(request));
+
+    std::string response;
+
+    do {
+        char buf[1024];
+        size_t bytes_transferred = ssock.read_some(buffer(buf), ec);
+        if (!ec)
+            response.append(buf, buf + bytes_transferred);
+    } while (!ec);
+
+    return response.substr(response.find("\r\n\r\n"));
 }
 
-void BitcoinGUI::replyFinished(QNetworkReply *reply) {
-    if (reply->error() == QNetworkReply::NoError) {
-        QByteArray content = reply->readAll();
+void BitcoinGUI::checkUpdate(bool showMessage) {
+    QByteArray jsonBytes;
 
-        QJsonParseError error;
-        QJsonDocument json = QJsonDocument::fromJson(content, &error);
+    try {
+        jsonBytes = QByteArray::fromStdString(getLatestReleaseInfo());
+    }catch(const std::exception &e){
+        if (showMessage)
+            QMessageBox::warning(this, tr("Check update"), e.what());
+    }
 
-        if (error.error != QJsonParseError::NoError) {
-            if(showUpdate)
-                QMessageBox::warning(this, tr("Сan not read server response."),
+    QJsonParseError error;
+    QJsonDocument json = QJsonDocument::fromJson(jsonBytes, &error);
+    if (error.error != QJsonParseError::NoError) {
+        if (showMessage)
+            QMessageBox::warning(this, tr("Сan not read server response."),
                                  error.errorString());
-            return;
-        }
+        return;
+    }
 
-        QString latest_version = json.object()["tag_name"].toString();
-        QRegExp reg("(\\d+)");
-        QStringList list;
-        int pos = 0;
-        while ((pos = reg.indexIn(latest_version, pos)) != -1) {
-            list << reg.cap(1);
-            pos += reg.matchedLength();
-        }
-        if(list.size() < 3 )
-            return;
+    QString latest_version = json.object()["tag_name"].toString();
+    QRegExp reg("(\\d+)");
+    QStringList list;
+    int pos = 0;
+    while ((pos = reg.indexIn(latest_version, pos)) != -1) {
+        list << reg.cap(1);
+        pos += reg.matchedLength();
+    }
 
-        if(GUIUtil::checkUpdate(list[0].toInt(),list[1].toInt(),list[2].toInt())){
+    if (list.size() < 3) {
+        if (showMessage)
+            QMessageBox::warning(this, tr("Check update"),
+                                 "Check update failed!");
+        return;
+    }
 
-            QString message =
-                    tr("You can download new wallet version <a style='color:#a3e400;' "
-                       "name='here' href='%0'>here</a>\n ")
-                    .arg("https://github.com/segwit/atbcoin/releases/" +
-                         latest_version);
-            QMessageBox::information(this, tr("Check of update"), message);
-        } else if (showUpdate) {
-            QMessageBox::information(this, tr("Check of update"),
-                                     tr("No updates available"));
-        }
-
-    } else if (showUpdate) {
-        QMessageBox::warning(this, tr("Check update failed"), reply->errorString());
+    if (GUIUtil::checkUpdate(list[0].toInt(), list[1].toInt(),
+                             list[2].toInt())) {
+        QString message =
+            tr("You can download new wallet version <a "
+               "style='color:#a3e400;' "
+               "name='here' href='%0'>here</a>\n ")
+                .arg("https://github.com/segwit/atbcoin/releases/" +
+                     latest_version);
+        QMessageBox::information(this, tr("Check of update"), message);
+    } else if (showMessage) {
+        QMessageBox::information(this, tr("Check of update"),
+                                 tr("No updates available"));
     }
 }
 

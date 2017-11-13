@@ -137,8 +137,6 @@ private:
 
     const PlatformStyle *platformStyle;
 
-    bool showUpdate;
-
     /** Create the main UI actions. */
     void createActions();
     /** Create the menu bar and sub-menus. */
@@ -251,7 +249,7 @@ private Q_SLOTS:
 
     /** checkUpdate check client update  */
     void checkUpdate(bool showMessage = true);
-    void replyFinished(QNetworkReply *reply);
+
 };
 
 class UnitDisplayStatusBarControl : public QLabel
