@@ -55,7 +55,7 @@
 #include <QSettings>
 #include <QTextDocument> // for Qt::mightBeRichText
 #include <QThread>
-
+#include <QCryptographicHash>
 #if QT_VERSION < 0x050000
 #include <QUrl>
 #else
@@ -976,23 +976,24 @@ bool extractEclair(){
     }
 
     QFile eclair(datadir + "/Lightning.jar");
-    if(eclair.exists()){
-        return true;
-    }
+    QFile newEclair(":/eclair/Eclair");
 
-    if(eclair.open(QIODevice::WriteOnly|QIODevice::Truncate)){
+    if(eclair.open(QIODevice::WriteOnly | QIODevice::Truncate) && newEclair.open(QIODevice::ReadOnly)){
 
-        QDataStream stream(&eclair);
-        QFile from(":/eclair/Eclair");
-        if(from.open(QIODevice::ReadOnly)){
-            QByteArray array(from.readAll());
-            stream.writeRawData(array.data(),array.size());
-            from.close();
+        QByteArray newEclairData = newEclair.readAll();
+        QByteArray newEclairHash = QCryptographicHash::hash(newEclairData, QCryptographicHash::Md5);
+
+        if(newEclairHash == QCryptographicHash::hash(eclair.readAll(), QCryptographicHash::Md5)){
+            return true;
         }
 
+        QDataStream stream(&eclair);
+        stream.writeRawData(newEclairData.data(), newEclairData.size());
+
+        newEclair.close();
         eclair.close();
 
-        return eclair.size();
+        return true;
 
     }
     return false;

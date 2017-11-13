@@ -16,7 +16,7 @@ BITCOIN_CLI_BIN=$(top_builddir)/src/$(BITCOIN_CLI_NAME)$(EXEEXT)
 BITCOIN_WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
 
 BITCOIN_ECLAIR_DIR=$(top_builddir)/src/qt/lightning
-
+BITCOIN_ECLAIR_RES=$(top_builddir)/src/qt/qt_libbitcoinqt_a-qrc_bitcoin.o $(top_builddir)/src/qt/qrc_bitcoin.cpp
 empty :=
 space := $(empty) $(empty)
 
@@ -60,6 +60,7 @@ dist-hook:
 	
 eclair:
 	cd $(BITCOIN_ECLAIR_DIR) && mvn package -DskipTests
+	rm -f $(BITCOIN_ECLAIR_RES) 
 
 $(BITCOIN_WIN_INSTALLER): all-recursive
 	$(MKDIR_P) $(top_builddir)/release
