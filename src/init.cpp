@@ -1209,7 +1209,9 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         AddOneShot(strDest);
 #if ENABLE_ZMQ
     SoftSetArg("-zmqpubhashblock",DEFAULT_ZMQPUBHASHBLOCK);
+    SoftSetArg("-zmqpubrawblock",DEFAULT_ZMQPUBRAWTX);
     SoftSetArg("-zmqpubrawtx",DEFAULT_ZMQPUBRAWTX);
+
 
     pzmqNotificationInterface = CZMQNotificationInterface::CreateWithArguments(mapArgs);
 
