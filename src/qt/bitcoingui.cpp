@@ -1380,59 +1380,76 @@ void BitcoinGUI::checkUpdate(bool showMessage) {
 }
 
 void BitcoinGUI::startLightning() {
-  int eclairPort = 9735;
-  if (!GUIUtil::extractEclair()) {
-    QMessageBox::warning(this, tr("Lightning extract error"),
-                         tr("Could not install the lightning on your wallet."));
-    return;
-  }
+    int eclairPort = 9735;
 
-  if (EclairProcess || !QTcpSocket().bind(eclairPort)) {
-    QMessageBox::information(this, tr("Eclair"),
-                             tr("Eclair is already running"));
-    return;
-  }
+    if (walletModel->getEncryptionStatus() == WalletModel::Locked &&
+        QMessageBox::Yes ==
+            QMessageBox::question(this, tr("Start lightning"),
+                                  tr("For normal operation of the lightning, "
+                                     "wallet must be unlocked. "
+                                     "Do you want to unlock your wallet?"))) {
+        walletFrame->UnlockWallet();
+    }
 
-  QString datadir = QString::fromStdString(GetArg("-datadir", ""));
-  if (datadir.isEmpty()) {
-    datadir = QString::fromStdString(GetDefaultDataDir().string());
-  }
+    if(walletModel->getEncryptionStatus()==WalletModel::Locked)
+        return;
 
-  QString rpcuser = QString::fromStdString(GetArg("-rpcuser", ""));
-  QString rpcpass = QString::fromStdString(GetArg("-rpcpassword", ""));
-  QString network = QString::fromStdString(Params().NetworkIDString());
-  if (network == "test") network += "net";
-  QString zmqport = QString::fromStdString(
-      GetArg("-zmqpubhashblock", DEFAULT_ZMQPUBHASHBLOCK));
+    if (!GUIUtil::extractEclair()) {
+        QMessageBox::warning(
+            this, tr("Lightning extract error"),
+            tr("Could not install the lightning on your wallet."));
+        return;
+    }
 
-  QString program = "java";
-  QStringList arguments;
+    if (EclairProcess || !QTcpSocket().bind(eclairPort)) {
+        QMessageBox::information(this, tr("Eclair"),
+                                 tr("Eclair is already running"));
+        return;
+    }
 
-  arguments << "-Declair.datadir=" + datadir + "/eclair"
-            << QString("-Declair.server.port=%0").arg(eclairPort)
-            << "-Declair.bitcoind.atbdir=" + datadir
-            << "-Declair.bitcoind.rpcuser=" + rpcuser
-            << "-Declair.bitcoind.rpcpassword=" + rpcpass
-            << "-Declair.bitcoind.zmq=" + zmqport << "-Declair.chain=" + network
-            << "-jar" << datadir + "/Lightning.jar";
+    QString datadir = QString::fromStdString(GetArg("-datadir", ""));
+    if (datadir.isEmpty()) {
+        datadir = QString::fromStdString(GetDefaultDataDir().string());
+    }
 
-  EclairProcess = new QProcess(this);
-  EclairProcess->start(program, arguments);
-  EclairProcess->waitForStarted();
+    QString rpcuser = QString::fromStdString(GetArg("-rpcuser", ""));
+    QString rpcpass = QString::fromStdString(GetArg("-rpcpassword", ""));
+    QString network = QString::fromStdString(Params().NetworkIDString());
+    if (network == "test")
+        network += "net";
+    QString zmqport = QString::fromStdString(
+        GetArg("-zmqpubhashblock", DEFAULT_ZMQPUBHASHBLOCK));
 
-  if (EclairProcess->state() == QProcess::NotRunning &&
-      EclairProcess->error() == QProcess::FailedToStart) {
-    QMessageBox::warning(
-        this, tr("Java not found"),
-        tr("You need to download and install Java. click on the <a "
-           "style='color:#a3e400;' "
-           "href='http://www.oracle.com/technetwork/java/javase/downloads/"
-           "jre8-downloads-2133155.html'>link</a> to download."));
-    delete EclairProcess;
-    EclairProcess = NULL;
-  }
+    QString program = "java";
+    QStringList arguments;
 
-  connect(EclairProcess, SIGNAL(finished(int)), SLOT(processHasFinished(int)));
+    arguments << "-Declair.datadir=" + datadir + "/eclair"
+              << QString("-Declair.server.port=%0").arg(eclairPort)
+              << "-Declair.bitcoind.atbdir=" + datadir
+              << "-Declair.bitcoind.rpcuser=" + rpcuser
+              << "-Declair.bitcoind.rpcpassword=" + rpcpass
+              << "-Declair.bitcoind.zmq=" + zmqport
+              << "-Declair.chain=" + network << "-jar"
+              << datadir + "/Lightning.jar";
+
+    EclairProcess = new QProcess(this);
+    EclairProcess->start(program, arguments);
+    EclairProcess->waitForStarted();
+
+    if (EclairProcess->state() == QProcess::NotRunning &&
+        EclairProcess->error() == QProcess::FailedToStart) {
+        QMessageBox::warning(
+            this, tr("Java not found"),
+            tr("You need to download and install Java. click on the <a "
+               "style='color:#a3e400;' "
+               "href='http://www.oracle.com/technetwork/java/javase/downloads/"
+               "jre8-downloads-2133155.html'>link</a> to download."));
+        delete EclairProcess;
+        EclairProcess = NULL;
+    }
+
+    connect(EclairProcess, SIGNAL(finished(int)),
+            SLOT(processHasFinished(int)));
 }
 
 void BitcoinGUI::processHasFinished(int){
