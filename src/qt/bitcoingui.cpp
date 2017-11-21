@@ -146,8 +146,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     network(0),
     lightning(0),
     EclairProcess(0),
-    platformStyle(platformStyle),
-    showUpdate(false)
+    platformStyle(platformStyle)
 {
     QRect desctop=QApplication::desktop()->screenGeometry();
     QSize size(desctop.width()*0.4,desctop.height()*0.4);
@@ -1337,6 +1336,7 @@ void BitcoinGUI::checkUpdate(bool showMessage) {
     }catch(const std::exception &e){
         if (showMessage)
             QMessageBox::warning(this, tr("Check update"), e.what());
+        return;
     }
 
     QJsonParseError error;
@@ -1382,6 +1382,20 @@ void BitcoinGUI::checkUpdate(bool showMessage) {
 void BitcoinGUI::startLightning() {
     int eclairPort = 9735;
 
+    QDateTime currentDate = QDateTime::currentDateTime();
+    qint64 secs = clientModel->getLastBlockDate().secsTo(currentDate);
+    const int HOUR_IN_SECONDS = 60 * 60;
+
+    enum BlockSource blockSource = clientModel->getBlockSource();
+
+
+    if (blockSource == BLOCK_SOURCE_NONE || secs > HOUR_IN_SECONDS) {
+        QMessageBox::information(
+            this, tr("Synchronization"),
+            tr("Wait until the network is fully synchronized and try again."));
+        return;
+    }
+
     if (walletModel->getEncryptionStatus() == WalletModel::Locked &&
         QMessageBox::Yes ==
             QMessageBox::question(this, tr("Start lightning"),
@@ -1423,7 +1437,7 @@ void BitcoinGUI::startLightning() {
     QString program = "java";
     QStringList arguments;
 
-    arguments << "-Declair.datadir=" + datadir + "/eclair"
+    arguments << "-Declair.datadir=" + datadir + "/lightning"
               << QString("-Declair.server.port=%0").arg(eclairPort)
               << "-Declair.bitcoind.atbdir=" + datadir
               << "-Declair.bitcoind.rpcuser=" + rpcuser
