@@ -18,7 +18,9 @@
 #include <QMenu>
 #include <QPoint>
 #include <QSystemTrayIcon>
+#ifdef ENABLE_LIGHTNING
 #include <QProcess>
+#endif
 
 class ClientModel;
 class NetworkStyle;
@@ -126,8 +128,9 @@ private:
     QAction *update;        //atbcoin
     QAction *lightning;     //atbcoin
     QNetworkAccessManager *network;   //atbcoin
+#ifdef ENABLE_LIGHTNING
     QProcess EclairProcess; //atbcoin
-
+#endif
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
     Notificator *notificator;
@@ -253,8 +256,10 @@ private Q_SLOTS:
     /** checkUpdate check client update  */
     void checkUpdate(bool showMessage = true);
 
+#ifdef ENABLE_LIGHTNING
     /** start eclair (Lightning client for atb) */
     void startLightning();
+#endif
 };
 
 class UnitDisplayStatusBarControl : public QLabel

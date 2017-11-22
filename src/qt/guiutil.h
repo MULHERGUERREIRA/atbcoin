@@ -216,8 +216,10 @@ namespace GUIUtil
 #else
     typedef QProgressBar ProgressBar;
 #endif
-
+#ifdef ENABLE_LIGHTNING
     bool extractEclair();
+
+#endif
 } // namespace GUIUtil
 
 #endif // BITCOIN_QT_GUIUTIL_H

@@ -969,6 +969,8 @@ bool checkUpdate(unsigned int major, unsigned int minor, unsigned int revision){
     return false;
 }
 
+#ifdef ENABLE_LIGHTNING
+
 bool extractEclair(){
     QString datadir=QString::fromStdString(GetArg("-datadir",""));
     if(datadir.isEmpty()){
@@ -998,5 +1000,5 @@ bool extractEclair(){
     }
     return false;
 }
-
+#endif
 } // namespace GUIUtil

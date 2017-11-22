@@ -143,7 +143,9 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     mining(0),
     update(0),
     network(0),
+    #ifdef ENABLE_LIGHTNING
     lightning(0),
+    #endif
     platformStyle(platformStyle)
 {
     QRect desctop=QApplication::desktop()->screenGeometry();
@@ -413,7 +415,10 @@ void BitcoinGUI::createActions()
 
     update = new QAction(platformStyle->SingleColorIcon(":/movies/spinner-000"),tr("Check for updates"),this);
 
+#ifdef ENABLE_LIGHTNING
     lightning = new QAction(platformStyle->SingleColorIcon(":/icons/r_coupon"),tr("Lightning"),this);
+#endif
+
 /*****************************************************************************************************/
 
     showHelpMessageAction->setStatusTip(tr("Return to the previously made backup copy of the wallet.").arg(tr(PACKAGE_NAME)));
@@ -421,7 +426,10 @@ void BitcoinGUI::createActions()
     connect(shareDialog,SIGNAL(triggered(bool)),this,SLOT(shareDialogClicked()));
     connect(mining,SIGNAL(triggered(bool)),SLOT(miningStateChange()));
     connect(update,SIGNAL(triggered()),SLOT(checkUpdate()));
+
+#ifdef ENABLE_LIGHTNING
     connect(lightning,SIGNAL(triggered()),SLOT(startLightning()));
+#endif
 
 
     connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -470,7 +478,9 @@ void BitcoinGUI::createMenuBar()
     if(walletFrame)
     {
         file->addAction(openAction);
+#ifdef ENABLE_LIGHTNING
         file->addAction(lightning);
+#endif
         file->addAction(backupWalletAction);
         file->addAction(restoreWallet);
         file->addAction(signMessageAction);
@@ -1376,7 +1386,7 @@ void BitcoinGUI::checkUpdate(bool showMessage) {
                                  tr("No updates available"));
     }
 }
-
+#ifdef ENABLE_LIGHTNING
 void BitcoinGUI::startLightning() {
     int eclairPort = 9735;
 
@@ -1457,7 +1467,7 @@ void BitcoinGUI::startLightning() {
                "jre8-downloads-2133155.html'>link</a> to download."));
     }
 }
-
+#endif
 
 UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *platformStyle) :
     optionsModel(0),

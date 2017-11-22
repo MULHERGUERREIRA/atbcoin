@@ -104,7 +104,4 @@
     <qresource prefix="/style">
         <file alias="WalletStyle">WalletStyle.css</file>
     </qresource>
-    <qresource prefix="/eclair">
-        <file alias="Eclair">lightning/eclair-node-gui/target/eclair-node-gui-capsule.jar</file>
-    </qresource>
 </RCC>

@@ -57,10 +57,14 @@ COVERAGE_INFO = baseline_filtered_combined.info baseline.info block_test.info \
 dist-hook:
 	-$(GIT) archive --format=tar HEAD -- src/clientversion.cpp | $(AMTAR) -C $(top_distdir) -xf -
 	
-	
+if ENABLE_LIGHTNING
 eclair:
 	cd $(BITCOIN_ECLAIR_DIR) && mvn package -DskipTests
 	rm -f $(BITCOIN_ECLAIR_RES) 
+endif
+
+
+
 
 $(BITCOIN_WIN_INSTALLER): all-recursive
 	$(MKDIR_P) $(top_builddir)/release
@@ -238,6 +242,7 @@ DISTCLEANFILES = qa/pull-tester/tests_config.pyc
 
 clean_eclair:
 	cd $(BITCOIN_ECLAIR_DIR) && mvn clean
+
 
 clean-local:
 	rm -rf coverage_percent.txt test_bitcoin.coverage/ total.coverage/ qa/tmp/ cache/ $(OSX_APP)

@@ -79,6 +79,13 @@ AC_PATH_TOOL(OBJCOPY, objcopy)
 
 AC_ARG_VAR(PYTHONPATH, Augments the default search path for python module files)
 
+# with-lightning
+AC_ARG_ENABLE([lightning],
+  [AS_HELP_STRING([--disable-lightning],
+  [disable lightning (enabled by default)])],
+  [enable_lightning=$enableval],
+  [enable_lightning=yes])
+
 # with-depends
 AC_ARG_ENABLE([qt-translations],
   [AS_HELP_STRING([--enable-qt-translations],
@@ -924,6 +931,16 @@ if test "x$use_ccache" = "xyes"; then
     AX_CHECK_PREPROC_FLAG([-Qunused-arguments],[CPPFLAGS="-Qunused-arguments $CPPFLAGS"])
 fi
 
+dnl with lightning
+AC_MSG_CHECKING([if build with lightning])
+if test x$enable_lightning != xno; then
+  AC_MSG_RESULT(yes)
+  AC_DEFINE_UNQUOTED([ENABLE_LIGHTNING],[1],[build with lightning (enable by default)])
+
+else
+  AC_MSG_RESULT(no)
+fi
+
 dnl with depends
 AC_MSG_CHECKING([if build with qt translations])
 if test x$enable_qt_translations != xno -a x$bitcoin_enable_qt != xno; then
@@ -1037,6 +1054,7 @@ AM_CONDITIONAL([TARGET_DARWIN], [test x$TARGET_OS = xdarwin])
 AM_CONDITIONAL([BUILD_DARWIN], [test x$BUILD_OS = xdarwin])
 AM_CONDITIONAL([TARGET_WINDOWS], [test x$TARGET_OS = xwindows])
 AM_CONDITIONAL([ENABLE_QT_TRANSLATIONS],[test x$enable_qt_translations = xyes])
+AM_CONDITIONAL([ENABLE_LIGHTNING],[test x$enable_lightning = xyes])
 AM_CONDITIONAL([ENABLE_WALLET],[test x$enable_wallet = xyes])
 AM_CONDITIONAL([ENABLE_TESTS],[test x$BUILD_TEST = xyes])
 AM_CONDITIONAL([ENABLE_QT],[test x$bitcoin_enable_qt = xyes])
