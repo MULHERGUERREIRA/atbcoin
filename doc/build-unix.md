@@ -14,12 +14,24 @@ for example, when specifying the path of the dependency:
 Here BDB_PREFIX must be an absolute path - it is defined using $(pwd) which ensures
 the usage of the absolute path.
 
-To Build
+To Build 
 ---------------------
 
 ```bash
 ./autogen.sh
+git submodule update --init 	#if make with Lightning
 ./configure
+make eclair						#if make with Lightning
+make
+make install # optional
+```
+
+To Build without lightning
+---------------------
+
+```bash
+./autogen.sh
+./configure --disable-lightning
 make
 make install # optional
 ```
@@ -48,6 +60,14 @@ Optional dependencies:
  libqrencode | QR codes in GUI  | Optional for generating QR codes (only needed when GUI enabled)
  univalue    | Utility          | JSON parsing and encoding (bundled version will be used unless --with-system-univalue passed to configure)
  libzmq3     | ZMQ notification | Optional, allows generating ZMQ notifications (requires ZMQ version >= 4.x)
+
+Lightning dependencies:
+
+ 	OpenJDK1.8
+ 	OpenJRE1.8
+ 	OpenJFX
+ 	maven
+
 
 For the versions used in the release, see [release-process.md](release-process.md) under *Fetch and build inputs*.
 
@@ -100,6 +120,10 @@ Optional:
 ZMQ dependencies:
 
     sudo apt-get install libzmq3-dev (provides ZMQ API 4.x)
+
+Lightning dependencies:
+	
+	sudo apt-get install openjdk-8-jdk openjdk-8-jre openjfx maven
 
 Dependencies for the GUI: Ubuntu & Debian
 -----------------------------------------
