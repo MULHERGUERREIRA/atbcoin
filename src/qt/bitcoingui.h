@@ -18,6 +18,7 @@
 #include <QMenu>
 #include <QPoint>
 #include <QSystemTrayIcon>
+#include <QProcess>
 
 class ClientModel;
 class NetworkStyle;
@@ -32,7 +33,6 @@ class WalletModel;
 class HelpMessageDialog;
 class QNetworkAccessManager;
 class QNetworkReply;
-class QProcess;
 
 class CWallet;
 
@@ -126,7 +126,7 @@ private:
     QAction *update;        //atbcoin
     QAction *lightning;     //atbcoin
     QNetworkAccessManager *network;   //atbcoin
-    QProcess *EclairProcess;//atbcoin
+    QProcess EclairProcess; //atbcoin
 
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;
@@ -255,7 +255,6 @@ private Q_SLOTS:
 
     /** start eclair (Lightning client for atb) */
     void startLightning();
-    void processHasFinished(int);
 };
 
 class UnitDisplayStatusBarControl : public QLabel

@@ -74,7 +74,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonParseError>
-#include <QProcess>
 
 #if ENABLE_ZMQ
 #include "zmq/zmqconfig.h"
@@ -145,7 +144,6 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     update(0),
     network(0),
     lightning(0),
-    EclairProcess(0),
     platformStyle(platformStyle)
 {
     QRect desctop=QApplication::desktop()->screenGeometry();
@@ -1415,7 +1413,7 @@ void BitcoinGUI::startLightning() {
         return;
     }
 
-    if (EclairProcess || !QTcpSocket().bind(eclairPort)) {
+    if (EclairProcess.state() != QProcess::NotRunning || !QTcpSocket().bind(eclairPort)) {
         QMessageBox::information(this, tr("Eclair"),
                                  tr("Eclair is already running"));
         return;
@@ -1446,30 +1444,20 @@ void BitcoinGUI::startLightning() {
               << "-Declair.chain=" + network << "-jar"
               << datadir + "/Lightning.jar";
 
-    EclairProcess = new QProcess(this);
-    EclairProcess->start(program, arguments);
-    EclairProcess->waitForStarted();
+    EclairProcess.start(program, arguments);
+    EclairProcess.waitForStarted();
 
-    if (EclairProcess->state() == QProcess::NotRunning &&
-        EclairProcess->error() == QProcess::FailedToStart) {
+    if (EclairProcess.state() == QProcess::NotRunning &&
+        EclairProcess.error() == QProcess::FailedToStart) {
         QMessageBox::warning(
             this, tr("Java not found"),
             tr("You need to download and install Java. click on the <a "
                "style='color:#a3e400;' "
                "href='http://www.oracle.com/technetwork/java/javase/downloads/"
                "jre8-downloads-2133155.html'>link</a> to download."));
-        delete EclairProcess;
-        EclairProcess = NULL;
     }
-
-    connect(EclairProcess, SIGNAL(finished(int)),
-            SLOT(processHasFinished(int)));
 }
 
-void BitcoinGUI::processHasFinished(int){
-    delete EclairProcess;
-    EclairProcess = NULL;
-}
 
 UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *platformStyle) :
     optionsModel(0),
