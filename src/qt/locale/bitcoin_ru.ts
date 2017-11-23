@@ -1532,7 +1532,7 @@
     </message>
     <message>
         <source>Redeem code</source>
-        <translation>Погасить код</translation>
+        <translation>Использовать код</translation>
     </message>
     <message>
         <source>Code Id</source>
@@ -1588,7 +1588,7 @@
     </message>
     <message>
         <source>Redeemed codes:</source>
-        <translation>Погашенные коды:</translation>
+        <translation>Использованные коды:</translation>
     </message>
     <message>
         <source>Bonus code is not available.</source>
