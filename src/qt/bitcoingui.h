@@ -127,7 +127,6 @@ private:
     QAction *mining;        //atbcoin
     QAction *update;        //atbcoin
     QAction *lightning;     //atbcoin
-    QNetworkAccessManager *network;   //atbcoin
 #ifdef ENABLE_LIGHTNING
     QProcess lightningProcess; //atbcoin
 #endif

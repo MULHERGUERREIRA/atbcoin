@@ -142,7 +142,6 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     unlock(0),
     mining(0),
     update(0),
-    network(0),
     #ifdef ENABLE_LIGHTNING
     lightning(0),
     #endif
@@ -273,11 +272,6 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     // Subscribe to notifications from core
     subscribeToCoreSignals();
 
-    network = new QNetworkAccessManager(this);
-
-    connect(network, SIGNAL(finished(QNetworkReply*)),
-            this, SLOT(replyFinished(QNetworkReply*)));
-    checkUpdate(false);
 }
 
 BitcoinGUI::~BitcoinGUI()
