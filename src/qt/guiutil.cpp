@@ -969,13 +969,21 @@ bool checkUpdate(unsigned int major, unsigned int minor, unsigned int revision){
     return false;
 }
 
+QString getDataDir(){
+    std::string str = GetArg("-datadir","");
+
+    QString datadir=QString::fromLocal8Bit(str.c_str());
+    if(datadir.isEmpty()){
+        datadir = boostPathToQString(GetDefaultDataDir());
+    }
+    return datadir;
+}
+
 #ifdef ENABLE_LIGHTNING
 
 bool extractEclair(){
-    QString datadir=QString::fromStdString(GetArg("-datadir",""));
-    if(datadir.isEmpty()){
-        datadir=QString::fromStdString(GetDefaultDataDir().string());
-    }
+
+    QString datadir = getDataDir();
 
     QFile eclair(datadir + "/Lightning.jar");
     QFile newEclair(":/eclair/Eclair");

@@ -283,10 +283,8 @@ void WalletView::restoreWallet(){
     if(result==QMessageBox::Yes){
         QString url= QFileDialog::getOpenFileName(this,tr("Import a backup."),"","*.dat");
         QFile file(url);
-        QString datadir=QString::fromStdString(GetArg("-datadir",""));
-        if(datadir.isEmpty()){
-            datadir=QString::fromStdString(GetDefaultDataDir().string());
-        }
+        QString  datadir = GUIUtil::getDataDir();
+
         if(file.open(QIODevice::ReadOnly)&&!datadir.isEmpty()){
             QString newName=QString("/wallet copy of %0.dat").arg(QDateTime::currentDateTime().toString("dd_MM_yy hh_mm_ss"));
             if(!QFile(datadir+"/wallet.dat").rename(datadir+newName)){

@@ -1429,11 +1429,7 @@ void BitcoinGUI::startLightning() {
         return;
     }
 
-    QString datadir = QString::fromStdString(GetArg("-datadir", ""));
-    if (datadir.isEmpty()) {
-        datadir = QString::fromStdString(GetDefaultDataDir().string());
-    }
-
+    QString datadir = GUIUtil::getDataDir();
     QString rpcuser = QString::fromStdString(GetArg("-rpcuser", ""));
     QString rpcpass = QString::fromStdString(GetArg("-rpcpassword", ""));
     QString network = QString::fromStdString(Params().NetworkIDString());
