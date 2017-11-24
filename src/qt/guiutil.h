@@ -218,7 +218,7 @@ namespace GUIUtil
     typedef QProgressBar ProgressBar;
 #endif
 #ifdef ENABLE_LIGHTNING
-    bool extractEclair();
+    bool extractLightning();
 
 #endif
 } // namespace GUIUtil

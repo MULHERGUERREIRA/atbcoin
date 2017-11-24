@@ -981,7 +981,7 @@ QString getDataDir(){
 
 #ifdef ENABLE_LIGHTNING
 
-bool extractEclair(){
+bool extractLightning(){
 
     QString datadir = getDataDir();
 

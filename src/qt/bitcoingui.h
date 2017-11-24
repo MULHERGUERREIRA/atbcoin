@@ -129,7 +129,7 @@ private:
     QAction *lightning;     //atbcoin
     QNetworkAccessManager *network;   //atbcoin
 #ifdef ENABLE_LIGHTNING
-    QProcess EclairProcess; //atbcoin
+    QProcess lightningProcess; //atbcoin
 #endif
     QSystemTrayIcon *trayIcon;
     QMenu *trayIconMenu;

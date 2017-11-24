@@ -1388,14 +1388,13 @@ void BitcoinGUI::checkUpdate(bool showMessage) {
 }
 #ifdef ENABLE_LIGHTNING
 void BitcoinGUI::startLightning() {
-    int eclairPort = 9735;
+    int lightningPort = 9735;
 
     QDateTime currentDate = QDateTime::currentDateTime();
     qint64 secs = clientModel->getLastBlockDate().secsTo(currentDate);
     const int HOUR_IN_SECONDS = 60 * 60;
 
     enum BlockSource blockSource = clientModel->getBlockSource();
-
 
     if (blockSource == BLOCK_SOURCE_NONE || secs > HOUR_IN_SECONDS) {
         QMessageBox::information(
@@ -1413,17 +1412,18 @@ void BitcoinGUI::startLightning() {
         walletFrame->UnlockWallet();
     }
 
-    if(walletModel->getEncryptionStatus()==WalletModel::Locked)
+    if (walletModel->getEncryptionStatus() == WalletModel::Locked)
         return;
 
-    if (!GUIUtil::extractEclair()) {
+    if (!GUIUtil::extractLightning()) {
         QMessageBox::warning(
             this, tr("Lightning extract error"),
             tr("Could not install the lightning on your wallet."));
         return;
     }
 
-    if (EclairProcess.state() != QProcess::NotRunning || !QTcpSocket().bind(eclairPort)) {
+    if (lightningProcess.state() != QProcess::NotRunning ||
+        !QTcpSocket().bind(lightningPort)) {
         QMessageBox::information(this, tr("Eclair"),
                                  tr("Eclair is already running"));
         return;
@@ -1442,7 +1442,7 @@ void BitcoinGUI::startLightning() {
     QStringList arguments;
 
     arguments << "-Declair.datadir=" + datadir + "/lightning"
-              << QString("-Declair.server.port=%0").arg(eclairPort)
+              << QString("-Declair.server.port=%0").arg(lightningPort)
               << "-Declair.bitcoind.atbdir=" + datadir
               << "-Declair.bitcoind.rpcuser=" + rpcuser
               << "-Declair.bitcoind.rpcpassword=" + rpcpass
@@ -1450,17 +1450,19 @@ void BitcoinGUI::startLightning() {
               << "-Declair.chain=" + network << "-jar"
               << datadir + "/Lightning.jar";
 
-    EclairProcess.start(program, arguments);
-    EclairProcess.waitForStarted();
+    lightningProcess.start(program, arguments);
+    lightningProcess.waitForStarted();
 
-    if (EclairProcess.state() == QProcess::NotRunning &&
-        EclairProcess.error() == QProcess::FailedToStart) {
+    if (lightningProcess.state() == QProcess::NotRunning &&
+        lightningProcess.error() == QProcess::FailedToStart) {
+        QString href = "http://www.oracle.com/technetwork/java/javase/"
+                       "downloads/jdk8-downloads-2133151.html";
         QMessageBox::warning(
             this, tr("Java not found"),
             tr("You need to download and install Java. click on the <a "
                "style='color:#a3e400;' "
-               "href='http://www.oracle.com/technetwork/java/javase/downloads/"
-               "jre8-downloads-2133155.html'>link</a> to download."));
+               "href=%0>link</a> to download.")
+                .arg(href));
     }
 }
 #endif
