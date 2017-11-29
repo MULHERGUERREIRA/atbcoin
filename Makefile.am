@@ -16,7 +16,7 @@ BITCOIN_CLI_BIN=$(top_builddir)/src/$(BITCOIN_CLI_NAME)$(EXEEXT)
 BITCOIN_WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
 
 BITCOIN_ECLAIR_DIR=$(top_builddir)/src/qt/lightning
-BITCOIN_ECLAIR_RES=$(top_builddir)/src/qt/qt_libbitcoinqt_a-qrc_bitcoin.o $(top_builddir)/src/qt/qrc_bitcoin.cpp
+BITCOIN_ECLAIR_RES=$(top_builddir)/src/qt/qt_libbitcoinqt_a-qrc_lightning.o $(top_builddir)/src/qt/qrc_lightning.cpp
 empty :=
 space := $(empty) $(empty)
 
