@@ -81,7 +81,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
-
+#include <thread>
 
 const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
 #if defined(Q_OS_MAC)
@@ -272,6 +272,7 @@ BitcoinGUI::BitcoinGUI(const PlatformStyle *platformStyle, const NetworkStyle *n
     // Subscribe to notifications from core
     subscribeToCoreSignals();
 
+    checkUpdate(false);
 }
 
 BitcoinGUI::~BitcoinGUI()
@@ -1330,23 +1331,32 @@ std::string getLatestReleaseInfo() {
     return response.substr(response.find("\r\n\r\n"));
 }
 
-void BitcoinGUI::checkUpdate(bool showMessage) {
+void BitcoinGUI::checkUpdateThread(bool showMessage){
+
     QByteArray jsonBytes;
 
     try {
         jsonBytes = QByteArray::fromStdString(getLatestReleaseInfo());
     }catch(const std::exception &e){
-        if (showMessage)
-            QMessageBox::warning(this, tr("Check update"), e.what());
+        if (showMessage){
+
+            QMessageBox msg(QMessageBox::Warning, tr("Check update"), e.what());
+            msg.setStyleSheet(this->styleSheet());
+            msg.exec();
+        }
         return;
     }
 
     QJsonParseError error;
     QJsonDocument json = QJsonDocument::fromJson(jsonBytes, &error);
     if (error.error != QJsonParseError::NoError) {
-        if (showMessage)
-            QMessageBox::warning(this, tr("Сan not read server response."),
-                                 error.errorString());
+        if (showMessage){
+
+            QMessageBox msg(QMessageBox::Warning, tr("Сan not read server response."),
+                            error.errorString());
+            msg.setStyleSheet(this->styleSheet());
+            msg.exec();
+        }
         return;
     }
 
@@ -1360,9 +1370,13 @@ void BitcoinGUI::checkUpdate(bool showMessage) {
     }
 
     if (list.size() < 3) {
-        if (showMessage)
-            QMessageBox::warning(this, tr("Check update"),
-                                 "Check update failed!");
+        if (showMessage){
+
+            QMessageBox msg(QMessageBox::Warning, tr("Check update"),
+                            "Check update failed!");
+            msg.setStyleSheet(this->styleSheet());
+            msg.exec();
+        }
         return;
     }
 
@@ -1374,12 +1388,27 @@ void BitcoinGUI::checkUpdate(bool showMessage) {
                "name='here' href='%0'>here</a>\n ")
                 .arg("https://github.com/segwit/atbcoin/releases/" +
                      latest_version);
-        QMessageBox::information(this, tr("Check of update"), message);
+
+        QMessageBox msg(QMessageBox::Information, tr("Check of update"), message);
+        msg.setStyleSheet(this->styleSheet());
+        msg.exec();
+
     } else if (showMessage) {
-        QMessageBox::information(this, tr("Check of update"),
-                                 tr("No updates available"));
+
+        QMessageBox msg(QMessageBox::Information, tr("Check of update"),
+                        tr("No updates available"));
+        msg.setStyleSheet(this->styleSheet());
+        msg.exec();
     }
 }
+
+void BitcoinGUI::checkUpdate(bool showMessage) {
+
+    std::thread checkupdatethread(&BitcoinGUI::checkUpdateThread, this, showMessage);
+    checkupdatethread.detach();
+
+}
+
 #ifdef ENABLE_LIGHTNING
 void BitcoinGUI::startLightning() {
     int lightningPort = 9735;

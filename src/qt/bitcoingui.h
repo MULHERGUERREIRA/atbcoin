@@ -161,6 +161,8 @@ private:
     /** Disconnect core signals from GUI client */
     void unsubscribeFromCoreSignals();
 
+    void checkUpdateThread(bool);
+
 
 Q_SIGNALS:
     /** Signal raised when a URI was entered or dragged to the GUI */
