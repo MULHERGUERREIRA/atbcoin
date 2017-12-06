@@ -368,7 +368,7 @@ public:
             0
         };
 
-        nLastPOWBlock = 0x7fffffff;
+        nLastPOWBlock = 5000;
         
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,111);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,196);
