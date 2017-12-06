@@ -2951,7 +2951,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     if (block.IsProofOfWork())
         {
             //is crowdsale block
-            if(GetBoolArg("-crowdsale",DEFAULT_CROWDSALE) && CROWDSALE_BLOCK_COUNT >= pindex->nHeight && pindex->nHeight){
+            if(isCrowdsale(pindex->nHeight)){
                 if(block.vtx[0].GetHash()!=crowdsaleTxHashes[pindex->nHeight-1]){
                     return  error("ConnectBlock(): Crowdsale: Invalid hash of crowdsale tx %s", block.vtx[0].GetHash().ToString());
                 }

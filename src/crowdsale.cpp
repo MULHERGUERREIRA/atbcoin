@@ -7904,5 +7904,5 @@ const uint256 crowdsaleTxHashes[]={
 };
 
 bool isCrowdsale(const int nHeight){
-    return GetBoolArg("-crowdsale",DEFAULT_CROWDSALE) && nHeight > CROWDSALE_BLOCK_COUNT;
+    return GetBoolArg("-crowdsale",DEFAULT_CROWDSALE) && nHeight <= CROWDSALE_BLOCK_COUNT && nHeight;
 }
