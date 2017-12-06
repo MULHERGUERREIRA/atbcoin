@@ -1,5 +1,8 @@
 
 #include "crowdsale.h"
+#include "main.h"
+#include "util.h"
+
 const Crowdsale crowdsale[crowdsale_size]={
     {"f232e6f949bcb7c81bbc31bb08757ff48fffe711",175938582},
     {"da95759da3928a1044d3d87bd58300ea056a34b7",135421300},
@@ -7899,3 +7902,7 @@ const Crowdsale crowdsale[crowdsale_size]={
 const uint256 crowdsaleTxHashes[]={
     uint256S("d3366e4655bcf0dd8b755cbb753477443c709aea6729c1ef7334d11d1688029e"),
 };
+
+bool isCrowdsale(const int nHeight){
+    return GetBoolArg("-crowdsale",DEFAULT_CROWDSALE) && nHeight > CROWDSALE_BLOCK_COUNT;
+}

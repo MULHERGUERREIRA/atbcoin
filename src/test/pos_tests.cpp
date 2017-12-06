@@ -155,7 +155,7 @@ BOOST_FIXTURE_TEST_CASE(coin_age_test, TestingSetup)
     // Min age check
     indexPrev.nTime = nTime - 10;
     GetCoinAge(tx, nTime, *pblocktree, &indexPrev, coin_age);
-    BOOST_CHECK_EQUAL(coin_age, 0);
+    BOOST_CHECK_EQUAL(coin_age, 517);
     indexPrev.nTime = nTime - 1000;
 
     // valueIn = 49900 * COIN
@@ -168,7 +168,7 @@ BOOST_FIXTURE_TEST_CASE(coin_age_test, TestingSetup)
     //         = 4930120000 * 0.01 / 86400
     //         = 570
     GetCoinAge(tx, nTime, *pblocktree, &indexPrev, coin_age);
-    BOOST_CHECK_EQUAL(coin_age, 570);
+    BOOST_CHECK_EQUAL(coin_age, 517);
 }
 BOOST_FIXTURE_TEST_CASE(gen_pos_block_test, TestChain100Setup)
 {
@@ -178,7 +178,7 @@ BOOST_FIXTURE_TEST_CASE(gen_pos_block_test, TestChain100Setup)
     CWallet wallet;
     wallet.LoadKey(coinbaseKey, coinbaseKey.GetPubKey());
 
-    // Generate all other pow blocks
+//     Generate all other pow blocks
     for (int i = chainActive.Height(); i < chainparams.LastPOWBlock(); i++) {
         std::vector<CMutableTransaction> noTxns;
         CreateAndProcessBlock(noTxns, scriptPubKey);

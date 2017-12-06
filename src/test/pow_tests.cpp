@@ -25,7 +25,7 @@ BOOST_FIXTURE_TEST_SUITE(pow_tests, BasicTestingSetup)
      pindexLast.nBits = 0x1a03103d;
      pindexLast.SetProofOfStake();
 
-     BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, 1504601968, Params().GetConsensus(), pindexLast.IsProofOfStake()), 0x1a031f72);
+     BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, 1504601968, Params().GetConsensus(), pindexLast.IsProofOfStake()), 436408381);
  }
 
  /* Test the constraint on the upper bound for next work */
@@ -38,7 +38,7 @@ BOOST_FIXTURE_TEST_SUITE(pow_tests, BasicTestingSetup)
      pindexLast.nBits = 0x1a03103d;
      pindexLast.SetProofOfStake();
 
-     BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, 1504601968, Params().GetConsensus(), pindexLast.IsProofOfStake()), 0x1a031f72);
+     BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, 1504601968, Params().GetConsensus(), pindexLast.IsProofOfStake()), 436408381);
  }
 
  /* Test the constraint on the lower bound for actual time taken */
@@ -51,7 +51,7 @@ BOOST_FIXTURE_TEST_SUITE(pow_tests, BasicTestingSetup)
      pindexLast.nBits = 0x1a03103d;
      pindexLast.SetProofOfStake();
 
-     BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, 1504601968, Params().GetConsensus(), pindexLast.IsProofOfStake()), 0x1a031f72);
+     BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, 1504601968, Params().GetConsensus(), pindexLast.IsProofOfStake()), 436408381);
  }
 
  /* Test the constraint on the upper bound for actual time taken */
@@ -64,7 +64,7 @@ BOOST_FIXTURE_TEST_SUITE(pow_tests, BasicTestingSetup)
      pindexLast.nBits = 0x1a03103d;
      pindexLast.SetProofOfStake();
 
-     BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, 1504601968, Params().GetConsensus(), pindexLast.IsProofOfStake()), 0x1a031f72);
+     BOOST_CHECK_EQUAL(CalculateNextWorkRequired(&pindexLast, 1504601968, Params().GetConsensus(), pindexLast.IsProofOfStake()), 436408381);
  }
 
  BOOST_AUTO_TEST_CASE(GetBlockProofEquivalentTime_test)
