@@ -81,7 +81,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
-#include <thread>
+#include <boost/thread.hpp>
 
 const std::string BitcoinGUI::DEFAULT_UIPLATFORM =
 #if defined(Q_OS_MAC)
@@ -1404,8 +1404,8 @@ void BitcoinGUI::checkUpdateThread(bool showMessage){
 
 void BitcoinGUI::checkUpdate(bool showMessage) {
 
-    std::thread checkupdatethread(&BitcoinGUI::checkUpdateThread, this, showMessage);
-    checkupdatethread.detach();
+    boost::thread t{&BitcoinGUI::checkUpdateThread,this,showMessage};
+    t.detach();
 
 }
 
