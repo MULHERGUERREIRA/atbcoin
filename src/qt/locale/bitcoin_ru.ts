@@ -1466,22 +1466,12 @@
         <translation>Кошелек должен быть разблокирован. Вы хотите разблокировать свой кошелек?</translation>
     </message>
     <message>
-        <source>You can download new wallet version &lt;a style=&apos;color:#a3e400;&apos; name=&apos;here&apos; href=&apos;%0&apos;&gt;here&lt;/a&gt;
- If you need a wallet for another platform then visit the download &lt;a style=&apos;color:#a3e400;&apos; name=&apos;page&apos; href=&apos;%1&apos;&gt;page&lt;/a&gt;.</source>
-        <translation>Вы можете загрузить новую версию кошелька &lt;a style=&apos;color:#a3e400;&apos; name=&apos;здесь&apos; href=&apos;%0&apos;&gt;здесь&lt;/a&gt;
- Если вам нужен кошелек для другой платформы, то посетите &lt;a style=&apos;color:#a3e400;&apos; name=&apos;page&apos; href=&apos;%1&apos;&gt;страницу&lt;/a&gt; загрузки.</translation>
-    </message>
-    <message>
         <source>Check of update</source>
         <translation>Проверка обновлений</translation>
     </message>
     <message>
         <source></source>
         <translation>Нет доступных обновлений</translation>
-    </message>
-    <message>
-        <source>Check update failed</source>
-        <translation>Не удалось проверить обновления</translation>
     </message>
     <message>
         <source>Сan not read server response.</source>
@@ -1498,6 +1488,63 @@
     <message>
         <source>No updates available</source>
         <translation>Нет доступных обновлений</translation>
+    </message>
+    <message>
+        <source>Check update</source>
+        <translation>Проверка обновлений</translation>
+    </message>
+    <message>
+        <source>You can download new wallet version &lt;a style=&apos;color:#a3e400;&apos; name=&apos;here&apos; href=&apos;%0&apos;&gt;here&lt;/a&gt;
+ </source>
+        <translation>Вы можете загрузить новую версию кошелька &lt;a style=&apos;color:#a3e400;&apos; name=&apos;here&apos; href=&apos;%0&apos;&gt;здесь&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <source>Export HD Master key</source>
+        <translation>Экспорт HD Master ключа</translation>
+    </message>
+    <message>
+        <source>Lightning</source>
+        <translation >Лайтинг</translation>
+    </message>
+    <message>
+        <source>Synchronization</source>
+        <translation>Синхронизация</translation>
+    </message>
+    <message>
+        <source>Wait until the network is fully synchronized and try again.</source>
+        <translation>Подождите, пока сеть полностью синхронизируется и повторите попытку.</translation>
+    </message>
+    <message>
+        <source>Start lightning</source>
+        <translation>Запустить лайтинг</translation>
+    </message>
+    <message>
+        <source>For normal operation of the lightning, wallet must be unlocked. Do you want to unlock your wallet?</source>
+        <translation>Для нормальной работы лайтинга кошелек должен быть разблокирован. Вы хотите разблокировать свой кошелек?</translation>
+    </message>
+    <message>
+        <source>Lightning extract error</source>
+        <translation>Ошибка распаковки лайтинга</translation>
+    </message>
+    <message>
+        <source>Could not install the lightning on your wallet.</source>
+        <translation>Не удалось установить лайтинг на ваш кошелек.</translation>
+    </message>
+    <message>
+        <source>Eclair</source>
+        <translation>Лайтинг</translation>
+    </message>
+    <message>
+        <source>Eclair is already running</source>
+        <translation>Лайтинг уже запущен</translation>
+    </message>
+    <message>
+        <source>Java not found</source>
+        <translation>Java не найден</translation>
+    </message>
+    <message>
+        <source>You need to download and install Java. click on the &lt;a style=&apos;color:#a3e400;&apos; href=%0&gt;link&lt;/a&gt; to download.</source>
+        <translation>Вам необходимо загрузить и установить Java. нажать на &lt;a style=&apos;color:#a3e400;&apos; href=%0&gt;ссылку&lt;/a&gt; для загрузки.</translation>
     </message>
 </context>
 <context>
@@ -1928,6 +1975,21 @@ We recommend waiting for 3 transaction confirmations.</source>
     </message>
 </context>
 <context>
+    <name>HDKeyView</name>
+    <message>
+        <source>QR of HDKey</source>
+        <translation>QR код HD ключа</translation>
+    </message>
+    <message>
+        <source>QR is not available</source>
+        <translation>QR-код недоступен</translation>
+    </message>
+    <message>
+        <source>QR has not supported</source>
+        <translation>QR-код не поддерживается</translation>
+    </message>
+</context>
+<context>
     <name>HelpMessageDialog</name>
     <message>
         <source>version</source>
@@ -2144,10 +2206,6 @@ We recommend waiting for 3 transaction confirmations.</source>
     <message>
         <source>W&amp;allet</source>
         <translation>Б&amp;умажник</translation>
-    </message>
-    <message>
-        <source>Expert</source>
-        <translation>Эксперт</translation>
     </message>
     <message>
         <source>Enable coin &amp;control features</source>
@@ -3009,8 +3067,8 @@ We recommend waiting for 3 transaction confirmations.</source>
         <translation>Слишком длинный URI, попробуйте уменьшить текст для метки /сообщения.</translation>
     </message>
     <message>
-        <source>Error encoding URI into QR Code.</source>
-        <translation>Ошибка кодирования URI в QR-код.</translation>
+        <source>QR has not supported</source>
+        <translation>QR-код не поддерживается</translation>
     </message>
 </context>
 <context>
@@ -4198,3 +4256,4 @@ We recommend waiting for 3 transaction confirmations.</source>
     </message>
 </context>
 </TS>
+
