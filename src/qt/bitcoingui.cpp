@@ -1340,7 +1340,7 @@ void BitcoinGUI::checkUpdateThread(bool showMessage){
     }catch(const std::exception &e){
         if (showMessage){
 
-            QMessageBox msg(QMessageBox::Warning, tr("Check update"), e.what());
+            QMessageBox msg(QMessageBox::Warning, tr("Check update"), QString::fromLocal8Bit(e.what()));
             msg.setStyleSheet(this->styleSheet());
             msg.exec();
         }
@@ -1404,9 +1404,12 @@ void BitcoinGUI::checkUpdateThread(bool showMessage){
 
 void BitcoinGUI::checkUpdate(bool showMessage) {
 
+#ifdef Q_OS_LINUX
     boost::thread t{&BitcoinGUI::checkUpdateThread,this,showMessage};
     t.detach();
-
+#else
+    checkUpdateThread(showMessage);
+#endif
 }
 
 #ifdef ENABLE_LIGHTNING
