@@ -43,18 +43,17 @@ BOOST_AUTO_TEST_CASE(block_subsidy_test)
     TestBlockSubsidyHalvings(Params(CBaseChainParams::REGTEST).GetConsensus());
 }
 
-// BOOST_AUTO_TEST_CASE(subsidy_limit_test)
-// {
-//     const Consensus::Params& consensusParams = Params(CBaseChainParams::MAIN).GetConsensus();
-//     CAmount nSum = 0;
-//     for (int nHeight = 0; nHeight < 14000000; nHeight += 1000) {
-//         CAmount nSubsidy = GetBlockSubsidy(nHeight, consensusParams);
-//         BOOST_CHECK(nSubsidy <= 50 * COIN);
-//         nSum += nSubsidy * 1000;
-//         BOOST_CHECK(MoneyRange(nSum));
-//     }
-//     BOOST_CHECK_EQUAL(nSum, 2099999997690000ULL);
-// }
+ BOOST_AUTO_TEST_CASE(subsidy_limit_test)
+ {
+     CAmount nSum = 0;
+     for (int nHeight = 2; nHeight <= 5002; nHeight += 2500) {
+         CAmount nSubsidy = GetProofOfWorkReward(nHeight);
+         BOOST_CHECK(nSubsidy <= 14971 * COIN);
+         nSum += nSubsidy * 1000;
+         BOOST_CHECK(MoneyRange(nSum));
+     }
+     BOOST_CHECK_EQUAL(nSum, 1599294066452000ULL);
+ }
 
 bool ReturnFalse() { return false; }
 bool ReturnTrue() { return true; }
