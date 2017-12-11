@@ -1412,8 +1412,8 @@ void BitcoinGUI::checkUpdate(bool showMessage) {
 #endif
 }
 
-#ifdef ENABLE_LIGHTNING
 void BitcoinGUI::startLightning() {
+#ifdef ENABLE_LIGHTNING
     int lightningPort = 9735;
 
     QDateTime currentDate = QDateTime::currentDateTime();
@@ -1490,8 +1490,8 @@ void BitcoinGUI::startLightning() {
                "href=%0>link</a> to download.")
                 .arg(href));
     }
-}
 #endif
+}
 
 UnitDisplayStatusBarControl::UnitDisplayStatusBarControl(const PlatformStyle *platformStyle) :
     optionsModel(0),

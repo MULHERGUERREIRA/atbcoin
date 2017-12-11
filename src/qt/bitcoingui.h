@@ -257,10 +257,8 @@ private Q_SLOTS:
     /** checkUpdate check client update  */
     void checkUpdate(bool showMessage = true);
 
-#ifdef ENABLE_LIGHTNING
     /** start eclair (Lightning client for atb) */
     void startLightning();
-#endif
 };
 
 class UnitDisplayStatusBarControl : public QLabel
