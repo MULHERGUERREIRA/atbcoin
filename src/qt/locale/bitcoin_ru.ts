@@ -1504,7 +1504,7 @@
     </message>
     <message>
         <source>Lightning</source>
-        <translation >Лайтинг</translation>
+        <translation >Лайтнинг</translation>
     </message>
     <message>
         <source>Synchronization</source>
@@ -1516,27 +1516,27 @@
     </message>
     <message>
         <source>Start lightning</source>
-        <translation>Запустить лайтинг</translation>
+        <translation>Запустить лайтнинг</translation>
     </message>
     <message>
         <source>For normal operation of the lightning, wallet must be unlocked. Do you want to unlock your wallet?</source>
-        <translation>Для нормальной работы лайтинга кошелек должен быть разблокирован. Вы хотите разблокировать свой кошелек?</translation>
+        <translation>Для нормальной работы лайтнинга кошелек должен быть разблокирован. Вы хотите разблокировать свой кошелек?</translation>
     </message>
     <message>
         <source>Lightning extract error</source>
-        <translation>Ошибка распаковки лайтинга</translation>
+        <translation>Ошибка распаковки лайтнинга</translation>
     </message>
     <message>
         <source>Could not install the lightning on your wallet.</source>
-        <translation>Не удалось установить лайтинг на ваш кошелек.</translation>
+        <translation>Не удалось установить лайтнинг на ваш кошелек.</translation>
     </message>
     <message>
         <source>Eclair</source>
-        <translation>Лайтинг</translation>
+        <translation>Лайтнинг</translation>
     </message>
     <message>
         <source>Eclair is already running</source>
-        <translation>Лайтинг уже запущен</translation>
+        <translation>Лайтнинг уже запущен</translation>
     </message>
     <message>
         <source>Java not found</source>
